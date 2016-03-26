@@ -1,0 +1,98 @@
+CREATE TABLE airport(
+airport_code varchar(10) PRIMARY KEY,
+name varchar(255),
+city varchar(255),
+state varchar(2)
+);
+
+CREATE TABLE flight
+(
+flight_number int PRIMARY KEY,
+airline varchar(255),
+weekdays varchar(64)
+);
+
+CREATE TABLE flight_leg
+(
+flight_number int,
+leg_number int,
+departure_airport_code varchar(255),
+scheduled_departure_time time,
+arrival_airport_code varchar(255),
+scheduled_arrival_time time,
+PRIMARY KEY (flight_number, leg_number)
+);
+
+CREATE TABLE leg_instance(
+flight_number int,
+leg_number int,
+dates date, 
+Number_of_available_seats int,
+airplane_id int,
+Departure_airport_code varchar(255),
+Departure_time time,
+Arrival_airport_code varchar(255),
+arrival_time time,
+PRIMARY KEY(flight_number, leg_number, dates)
+);
+
+CREATE TABLE fare(
+flight_number int,
+fare_code varchar(11),
+amount float,
+restrictions varchar(255),
+PRIMARY KEY(flight_number, fare_code)
+);
+
+CREATE TABLE airplane_type(
+airplane_type_name varchar(255),
+max_seats int,
+company varchar(255),
+PRIMARY KEY(airplane_type_name)
+);
+
+CREATE TABLE can_land(
+airplane_type_name varchar(255),
+airport_code varchar(255),
+PRIMARY KEY(airplane_type_name, airport_code)
+);
+
+CREATE TABLE airplane(
+airplane_id int PRIMARY KEY,
+total_number_of_seats int,
+airplane_type varchar(255)
+);
+
+CREATE TABLE seat_reservation(
+flight_number int,
+leg_number int,
+dates date,
+seat_number varchar(4),
+custoner_name varchar(255),
+customer_phone int,
+PRIMARY KEY(flight_number, leg_number, dates, seat_number)
+);
+
+CREATE TABLE foo
+(
+id int PRIMARY KEY,
+bar_id int,
+baz_id int,
+a int
+);
+
+CREATE TABLE bar
+(
+id int PRIMARY KEY
+foo_id int,
+baz_id int,
+b int 
+);
+
+CREATE TABLE baz
+(
+id int PRIMARY KEY,
+foo_id int,
+bar_id int,
+c int
+);

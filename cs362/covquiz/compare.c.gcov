@@ -1,0 +1,58 @@
+        -:    0:Source:compare.c
+        -:    0:Graph:compare.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Programs:0
+        -:    1:#include <stdio.h>
+        -:    2:#include "bst.h"
+        -:    3:#include "assert.h"
+        -:    4:#include "structs.h"
+        -:    5:
+        -:    6:/*----------------------------------------------------------------------------
+        -:    7: very similar to the compareTo method in java or the strcmp function in c. it
+        -:    8: returns an integer to tell you if the left value is greater then, less then, or
+        -:    9: equal to the right value. you are comparing the number variable, letter is not
+        -:   10: used in the comparison.
+        -:   11: 
+        -:   12: if left < right return -1
+        -:   13: if left > right return 1
+        -:   14: if left = right return 0
+        -:   15: */
+        -:   16: 
+        -:   17: /*Define this function type casting the value of void * to the desired type*/
+    #####:   18:int compare(TYPE left, TYPE right)
+        -:   19:{
+        -:   20:    /*write this*/
+        -:   21:	/*return 0;*/
+        -:   22:	struct data* data1;
+        -:   23:	struct data* data2;
+    #####:   24:	data1=(struct data*)left;
+    #####:   25:	data2=(struct data*)right;
+        -:   26:	
+    #####:   27:	if (data1->number < data2->number)
+    $$$$$:   27-block  0
+    #####:   28:		return -1;
+    $$$$$:   28-block  0
+    #####:   29:	else if (data1->number > data2->number)
+    $$$$$:   29-block  0
+    #####:   30:		return 1;
+    $$$$$:   30-block  0
+        -:   31:	else 
+    #####:   32:		return 0;
+    $$$$$:   32-block  0
+    $$$$$:   32-block  1
+        -:   33:}
+        -:   34:
+        -:   35:/*Define this function type casting the value of void * to the desired type*/
+    #####:   36:void print_type(TYPE curval)
+        -:   37:{
+        -:   38:    /*write this*/
+        -:   39:	/*return 0;*/
+        -:   40:	struct data* data1;
+    #####:   41:	data1=(struct data*)curval;
+    #####:   42:	printf(" %d ", data1->number);	
+    $$$$$:   42-block  0
+        -:   43:	
+    #####:   44:}
+        -:   45:
+        -:   46:

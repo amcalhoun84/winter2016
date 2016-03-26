@@ -1,0 +1,7 @@
+ROOM NAME: GrueCave
+ROOM DESCRIPTION: It's dark and dank in here. You also feel like you just might get eaten by a grue.
+CONNECTION 1: Fizzbuzz
+CONNECTION 2: LoudRoom
+CONNECTION 3: OutsideHouse
+CONNECTION 4: Sluice
+ROOM TYPE: MID_ROOM

@@ -1,0 +1,372 @@
+        -:    0:Source:unitTest1.c
+        -:    0:Graph:unitTest1.gcno
+        -:    0:Data:unitTest1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// UNIT TEST - ASSIGNMENT 3
+        -:    3:// unitTest1.c
+        -:    4:// Unit Test for updateCoin function.
+        -:    5:
+        -:    6:#include "dominion.h"
+        -:    7:#include "dominion_helpers.h"
+        -:    8:#include "rngs.h"
+        -:    9:#include <string.h>
+        -:   10:#include <stdio.h>
+        -:   11:#include <assert.h>
+        -:   12:#include <time.h>
+        -:   13:#include <stdlib.h>
+        -:   14:#include <math.h>
+        -:   15:#include <stdlib.h>
+        -:   16:
+        -:   17:#define DEBUG 0
+        -:   18:#define NOISY_TEST 1
+        -:   19:
+        -:   20:// updateCoins Code for Reference
+        -:   21:
+        -:   22:/* int updateCoins(int player, struct gameState *state, int bonus)
+        -:   23:{
+        -:   24:  int i;
+        -:   25:
+        -:   26:  //reset coin count
+        -:   27:  state->coins = 0;
+        -:   28:
+        -:   29:  //add coins for each Treasure card in player's hand
+        -:   30:  for (i = 0; i < state->handCount[player]; i++)
+        -:   31:    {
+        -:   32:      if (state->hand[player][i] == copper)
+        -:   33:	{
+        -:   34:	  state->coins += 1;
+        -:   35:	}
+        -:   36:      else if (state->hand[player][i] == silver)
+        -:   37:	{
+        -:   38:	  state->coins += 2;
+        -:   39:	}
+        -:   40:      else if (state->hand[player][i] == gold)
+        -:   41:	{
+        -:   42:	  state->coins += 3;
+        -:   43:	}
+        -:   44:    }
+        -:   45:
+        -:   46:  //add bonus
+        -:   47:  state->coins += bonus;
+        -:   48:
+        -:   49:  return 0;
+        -:   50:}
+        -:   51:
+        -:   52:*/
+        -:   53:
+        -:   54:// Unit Prototype
+        -:   55:
+function main called 1 returned 100% blocks executed 80%
+        1:   56:int main()
+        -:   57:{
+        1:   58:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        -:   59:    int i, j; // counter variables
+        -:   60:    int bonus;
+        1:   61:    int testRun=0, testFailed=0, testPassed=0, randomTestFailed=0;// Test Counters
+        1:   62:    struct gameState *state = malloc(sizeof(struct gameState));
+        1:   63:    printf("STANDARDIZED TESTS:\nINITIALIZE GAME: 2 players... deck initialized.... state and memory allocated.\n");
+call    0 returned 100%
+        1:   64:    int k[10] = {adventurer, smithy, village, minion, council_room, feast, mine, remodel, baron, great_hall};
+        1:   65:    initializeGame(2, k, 1, state);
+call    0 returned 100%
+        -:   66:
+        1:   67:    bonus = rand() % 10;
+call    0 returned 100%
+        -:   68:    int goldBinary, goldHold;
+        -:   69:
+        -:   70:    int playerOneHand[10], playerTwoHand[10];
+        -:   71:    memcpy(state->hand[0], playerOneHand, 0);
+        -:   72:    memcpy(state->hand[0], playerTwoHand, 0);
+        1:   73:    state->handCount[0] = 0;
+        -:   74:
+        1:   75:    printf("State Coins: %d\n", state->coins);
+call    0 returned 100%
+        -:   76:
+        1:   77:    assert(state->coins == 4);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   78:    assert(playerOneHand);
+        -:   79:    assert(playerTwoHand);
+        1:   80:    assert(bonus <= 10);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   81:
+        -:   82:    // No Bonus, Empty Hand.
+        -:   83:
+        -:   84:    // printf("Randomized Test Value: %d\n", randomTestFailed);
+        -:   85:
+        1:   86:    printf("Empty Hand, No Bonus Cash.\n");
+call    0 returned 100%
+        1:   87:    updateCoins(0, state, 0);
+call    0 returned 100%
+        1:   88:    if(state->coins == 0) {
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   89:        printf("Test #1 Passed.\n");
+call    0 returned 100%
+        1:   90:        testRun++;
+        1:   91:        testPassed++;
+        -:   92:    }
+        -:   93:    else
+        -:   94:    {
+    #####:   95:        printf("Test #1 failed.\n Test found %d coins instead of 0\n.", state->coins);
+call    0 never executed
+    #####:   96:        testRun++;
+    #####:   97:        testFailed++;
+    #####:   98:        randomTestFailed = 1;
+        -:   99:    }
+        -:  100:
+        1:  101:    printf("Empty hand, 10 coin bonus.\n");
+call    0 returned 100%
+        1:  102:    updateCoins(0, state, 10);
+call    0 returned 100%
+        1:  103:    if(state->coins==10)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  104:    {
+        1:  105:       printf("Test #2 Passed.\n");
+call    0 returned 100%
+        1:  106:       testRun++;
+        1:  107:       testPassed++;
+        -:  108:    }
+        -:  109:    else
+        -:  110:    {
+    #####:  111:        printf("Test #2 failed.\n Test found %d coins instead of 10.\n", state->coins);
+call    0 never executed
+    #####:  112:        testRun++;
+    #####:  113:        testFailed++;
+    #####:  114:        randomTestFailed = 1;
+        -:  115:    }
+        -:  116:
+        1:  117:    printf("Empty hand, randomized bonus.\n");
+call    0 returned 100%
+        1:  118:    updateCoins(0, state, bonus);
+call    0 returned 100%
+        1:  119:    if(state->coins==bonus)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  120:    {
+        1:  121:        printf("Test #3 Passed.\n");
+call    0 returned 100%
+        1:  122:        testRun++;
+        1:  123:        testPassed++;
+        -:  124:    }
+        -:  125:    else
+        -:  126:    {
+    #####:  127:        printf("Test #3 failed.\n Test found %d instead of %d.\n", state->coins, bonus);
+call    0 never executed
+    #####:  128:        testRun++;
+    #####:  129:        testFailed++;
+    #####:  130:        randomTestFailed=1;
+        -:  131:    }
+        -:  132:
+        1:  133:    printf("No coins, negative bonus.\n");
+call    0 returned 100%
+        1:  134:    updateCoins(0, state, -5);
+call    0 returned 100%
+        1:  135:    if(state->coins == -5)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  136:    {
+        1:  137:        printf("Test #4 Passed.\n");
+call    0 returned 100%
+        1:  138:        testRun++;
+        1:  139:        testPassed++;
+        -:  140:    }
+        -:  141:    else
+        -:  142:    {
+    #####:  143:        printf("Test #4 Failed.\n");
+call    0 never executed
+    #####:  144:        testRun++;
+    #####:  145:        testFailed++;
+    #####:  146:        randomTestFailed=1;
+        -:  147:    }
+        -:  148:
+        1:  149:    printf("Two Coppers, Two Silver, No Bonus.\n");
+call    0 returned 100%
+        1:  150:    playerOneHand[0] = copper;
+        1:  151:    playerOneHand[1] = copper;
+        1:  152:    playerOneHand[2] = silver;
+        1:  153:    playerOneHand[3] = silver;
+        1:  154:    memcpy(state->hand[0], playerOneHand, 4 * sizeof(int));
+        1:  155:    state->handCount[0] = 4;
+        -:  156:
+        1:  157:    updateCoins(0, state, 0);
+call    0 returned 100%
+        1:  158:    if(state->coins == 6)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  159:    {
+        1:  160:        printf("Test #4 Passed!\n");
+call    0 returned 100%
+        1:  161:        testRun++;
+        1:  162:        testPassed++;
+        -:  163:    }
+        -:  164:    else
+        -:  165:    {
+    #####:  166:        printf("Test #4 Failed.\n Test found %d instead of 6 coins.\n", state->coins);
+call    0 never executed
+    #####:  167:        testRun++;
+    #####:  168:        testFailed++;
+    #####:  169:        randomTestFailed=1;
+        -:  170:
+        -:  171:    }
+        -:  172:
+        1:  173:    printf("Same test, two bonus.\n");
+call    0 returned 100%
+        1:  174:    updateCoins(0, state, 2);
+call    0 returned 100%
+        1:  175:    if(state->coins == 8)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  176:    {
+        1:  177:        printf("Test #5 Passed!\n");
+call    0 returned 100%
+        1:  178:        testRun++;
+        1:  179:        testPassed++;
+        -:  180:    }
+        -:  181:    else
+        -:  182:    {
+    #####:  183:        printf("Test #5 Failed.\n");
+call    0 never executed
+    #####:  184:        testRun++;
+    #####:  185:        testFailed++;
+    #####:  186:        randomTestFailed=1;
+        -:  187:    }
+        -:  188:
+        -:  189:    // printf("Randomized Test Value: %d\n", randomTestFailed);
+        -:  190:    // Reset the Number of Coins Held.
+        -:  191:    // state->coins = 0;
+        -:  192:
+        1:  193:    printf("Fully Randomized Tests\n");
+call    0 returned 100%
+       11:  194:    for(i = 0; i < 10; i++)
+branch  0 taken 91%
+branch  1 taken 9% (fallthrough)
+        -:  195:    {
+       10:  196:        state->coins = 0;
+      110:  197:        for(j=0; j<10; j++)
+branch  0 taken 91%
+branch  1 taken 9% (fallthrough)
+        -:  198:        {
+      100:  199:            goldBinary = rand() % 3;
+call    0 returned 100%
+      100:  200:            switch(goldBinary)
+branch  0 taken 38%
+branch  1 taken 29%
+branch  2 taken 33%
+branch  3 taken 0%
+        -:  201:            {
+        -:  202:                case 0:
+       38:  203:                    playerOneHand[j] = copper;
+       38:  204:                    break;
+        -:  205:                case 1:
+       29:  206:                    playerOneHand[j] = silver;
+       29:  207:                    break;
+        -:  208:                case 2:
+       33:  209:                    playerOneHand[j] = gold;
+        -:  210:                    break;
+        -:  211:            }
+        -:  212:        }
+      110:  213:        for(j=0; j<10; j++)
+branch  0 taken 91%
+branch  1 taken 9% (fallthrough)
+        -:  214:        {
+      100:  215:            if(state->hand[0][j] == copper)
+branch  0 taken 20% (fallthrough)
+branch  1 taken 80%
+        -:  216:            {
+       20:  217:                state->coins += 1;
+        -:  218:            }
+      100:  219:            if(state->hand[0][j] == silver)
+branch  0 taken 20% (fallthrough)
+branch  1 taken 80%
+        -:  220:            {
+       20:  221:                state->coins += 2;
+        -:  222:            }
+      100:  223:            if(state->hand[0][j] == gold)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  224:            {
+    #####:  225:                state->coins += 3;
+        -:  226:            }
+        -:  227:        }
+        -:  228:
+       10:  229:        goldHold = state->coins;
+       10:  230:        bonus = rand() % 10;
+call    0 returned 100%
+       10:  231:        goldHold += bonus;
+       10:  232:        updateCoins(0, state, bonus);
+call    0 returned 100%
+        -:  233:
+       10:  234:        if(state->coins == goldHold)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  235:        {
+       10:  236:            printf("State Gold (Expected): %d\n", state->coins);
+call    0 returned 100%
+       10:  237:            printf("Player Gold (Result): %d\n", goldHold);
+call    0 returned 100%
+       10:  238:            printf("Randomized Test Passed.\n");
+call    0 returned 100%
+       10:  239:            testRun++;
+       10:  240:            testPassed++;
+        -:  241:        }
+        -:  242:        else
+        -:  243:        {
+    #####:  244:            printf("Randomized Test Failed.\n");
+call    0 never executed
+    #####:  245:            testRun++;
+    #####:  246:            testFailed++;
+    #####:  247:            randomTestFailed=1;
+        -:  248:           // break;  // if any randomized tests fail, break the loop..
+        -:  249:        }
+        -:  250:    }
+        -:  251:
+        -:  252:    // state->coins = 0;
+        1:  253:    printf("Tests Run: %d\n", testRun);
+call    0 returned 100%
+        1:  254:    printf("Tests Passed: %d\n", testPassed);
+call    0 returned 100%
+        1:  255:    printf("Tests Failed: %d\n", testFailed);
+call    0 returned 100%
+        -:  256:
+        -:  257:
+        1:  258:    printf("Randomized Test Fail Value: %d\n", randomTestFailed);
+call    0 returned 100%
+        -:  259:
+        -:  260:
+        1:  261:    if(randomTestFailed == 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  262:    {
+        1:  263:        printf("All Random Tests Passed!\n\n");
+call    0 returned 100%
+        -:  264:    }
+        -:  265:    else
+        -:  266:    {
+    #####:  267:        printf("One or more random tests failed.\n\n");
+call    0 never executed
+        -:  268:    }
+        -:  269://    // 4000 Test Cases (20^2)
+        -:  270://        for(i = 0; i < 4000; i++)
+        -:  271://        {
+        -:  272://            for(i = 0; i < sizeof(struct gameState); i++)
+        -:  273://            {
+        -:  274://                result = unitTest(state);
+        -:  275://                if(result == 1) printf("FAIL!\n");
+        -:  276://                else printf("PASS!\n");
+        -:  277://            }
+        -:  278://        }
+        -:  279://
+        1:  280:    return 0;
+        -:  281:}
+        -:  282:
+        -:  283:
+        -:  284:

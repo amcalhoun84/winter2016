@@ -1,0 +1,9 @@
+ROOM NAME: Lothlorien
+ROOM DESCRIPTION: You are outside a white house, in an open field. There is a mailbox here.
+CONNECTION 1: OutsideHouse
+CONNECTION 2: Sluice
+CONNECTION 3: MtDoom
+CONNECTION 4: LoudRoom
+CONNECTION 5: ZotRoom
+CONNECTION 6: GrueCave
+ROOM TYPE: MID_ROOM

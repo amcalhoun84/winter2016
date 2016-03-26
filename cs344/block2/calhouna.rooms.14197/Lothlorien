@@ -1,0 +1,7 @@
+ROOM NAME: Lothlorien
+ROOM DESCRIPTION: A beautiful Elven holdfast, a delicate and reassuring melody echoes through the air.
+CONNECTION 1: Sluice
+CONNECTION 2: OutsideHouse
+CONNECTION 3: LoudRoom
+CONNECTION 4: ZotRoom
+ROOM TYPE: MID_ROOM

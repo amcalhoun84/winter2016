@@ -1,0 +1,7 @@
+ROOM NAME: Sluice
+ROOM DESCRIPTION: Light dapples the ground as the sun shines through pine trees. You hear a song bird in the distance.
+CONNECTION 1: OutsideHouse
+CONNECTION 2: Fizzbuzz
+CONNECTION 3: Lothlorien
+CONNECTION 4: ZotRoom
+ROOM TYPE: MID_ROOM

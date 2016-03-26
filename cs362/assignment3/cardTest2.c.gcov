@@ -1,0 +1,434 @@
+        -:    0:Source:cardTest2.c
+        -:    0:Graph:cardTest2.gcno
+        -:    0:Data:cardTest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// CARD TEST - ASSIGNMENT 3
+        -:    3:// CardTest2.c
+        -:    4:// Unit Test for card function - SMITHY.
+        -:    5:
+        -:    6:// cardtest2: cardtest2.c dominion.o rngs.o
+        -:    7://       gcc -o cardtest2 -g  cardtest2.c dominion.o rngs.o $(CFLAGS)
+        -:    8:
+        -:    9:
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include "rngs.h"
+        -:   13:#include <string.h>
+        -:   14:#include <stdio.h>
+        -:   15:#include <assert.h>
+        -:   16:#include <time.h>
+        -:   17:#include <stdlib.h>
+        -:   18:#include <math.h>
+        -:   19:#include <stdlib.h>
+        -:   20:
+        -:   21:#define DEBUG 0
+        -:   22:#define NOISY_TEST 1
+        -:   23:#define TESTCARD "smithy"
+        -:   24:
+        -:   25:/*
+        -:   26:
+        -:   27:int playSmithy(struct gameState *state, int currentPlayer, int handPos)
+        -:   28:{
+        -:   29:
+        -:   30:    int i;
+        -:   31:
+        -:   32://+3 Cards  *** REFACTOR changes i++ to ++i, breaks the intent of the card.
+        -:   33:      for (i = 0; i < 3; ++i)
+        -:   34:	{
+        -:   35:	  drawCard(currentPlayer, state);
+        -:   36:	}
+        -:   37:      //discard card from hand
+        -:   38:      discardCard(handPos, currentPlayer, state, 0);
+        -:   39:      return 0;
+        -:   40:}
+        -:   41:
+        -:   42:*/
+        -:   43:
+function main called 1 returned 100% blocks executed 71%
+        1:   44:int main()
+        -:   45:{
+        1:   46:    int i, seed = 65535, numPlayer = 2, thisPlayer, index=0, allTestsPassed = 0, smithyFail = 0;
+        1:   47:    int k[10] = {adventurer, smithy, great_hall, council_room, salvager, gardens, mine, remodel, village, ambassador };
+        -:   48:
+        -:   49:    // Checking for victory conditions:
+        -:   50:    int victoryPoints; // kCardCount;
+        -:   51:    int points[13];
+        -:   52:
+        -:   53:    struct gameState state, testState;
+        -:   54:    //int count;
+        -:   55:
+        -:   56:
+        1:   57:    memset(&state, 0, sizeof(struct gameState)); // Ensure we have a clean slate.
+        1:   58:    initializeGame(numPlayer, k, seed, &testState);
+call    0 returned 100%
+        -:   59:
+        1:   60:    memcpy(&state, &testState, sizeof(struct gameState));
+        -:   61:
+        -:   62://    // DEBUG CHECK: MAKE SURE THAT ALL THINGS ARE IN PROPER ORDER!
+        -:   63://    printf("Supply of Estates: %d\n", testState.supplyCount[estate]);
+        -:   64://    assert(testState.supplyCount[estate] == 8);
+        -:   65://    printf("Supply of Duchies: %d\n", testState.supplyCount[duchy]);
+        -:   66://    assert(testState.supplyCount[duchy] == 8);
+        -:   67://    printf("Supply of Provinces: %d\n", testState.supplyCount[province]);
+        -:   68://    assert(testState.supplyCount[province] == 8);
+        -:   69:
+        -:   70:    // Treasure cards are variable, cards that assist in victory conditions such as the Land Parcels, Great Hall and Gardens should be 8, all Kingdom Cards should be 10. For the
+        -:   71:    // purposes of this test, we need to make sure that the supply of land parcels is proper.
+        -:   72:
+        1:   73:    printf("Testing Smithy!\n");
+call    0 returned 100%
+        -:   74:
+        1:   75:    victoryPoints = testState.supplyCount[estate];
+        1:   76:    points[index] = victoryPoints;
+        1:   77:    index++;
+        -:   78:
+        -:   79://    printf("Total Estate Victory Points: %d\n", victoryPoints);
+        1:   80:    assert(victoryPoints == 8);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   81:
+        -:   82:
+        1:   83:    victoryPoints = testState.supplyCount[duchy] * 3;
+        1:   84:    points[index] = victoryPoints;
+        1:   85:    index++;
+        -:   86:
+        -:   87:   // printf("Total Duchy Victory Points: %d\n", victoryPoints);
+        1:   88:    assert(victoryPoints == 24);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   89:
+        1:   90:    victoryPoints = testState.supplyCount[province] * 6;
+        1:   91:    points[index] = victoryPoints;
+        1:   92:    index++;
+        -:   93:
+        -:   94://    printf("Total Province Victory Points: %d\n", victoryPoints);
+        1:   95:    assert(victoryPoints == 48);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   96://    assert(points[0] == 8 && points[1] == 24 && points[2] == 48); // Make sure all the points match up.
+        -:   97:
+        -:   98://    for(i = 0; i < 10; i++)
+        -:   99://    {
+        -:  100://        kCardCount = testState.supplyCount[k[i]];
+        -:  101://        points[index] = kCardCount;
+        -:  102://        index++;
+        -:  103://        printf("k[%d] count: %d\n", i, kCardCount);
+        -:  104://        if(kCardCount != testState.supplyCount[k[i]]);
+        -:  105://        {
+        -:  106://            allTestsPassed=0;
+        -:  107://        }
+        -:  108://    }
+        -:  109://    if(!allTestsPassed) printf("Some cards do not have the proper supply. Please see reference materials or restore base game files for proper output.\n");
+        -:  110:
+        1:  111:    thisPlayer=0;
+        1:  112:    printf("Player 1 Test -- GIVING SMITHY");
+call    0 returned 100%
+        -:  113:
+        1:  114:    testState.hand[thisPlayer][testState.handCount[thisPlayer]] = smithy;
+        1:  115:    testState.handCount[thisPlayer]++;
+        1:  116:    if(state.handCount[thisPlayer] + 1 == testState.handCount[thisPlayer])
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  117:    {
+        1:  118:        printf("Giving Smithy Test Passed.\n");
+call    0 returned 100%
+        -:  119:    }
+        -:  120:    else
+        -:  121:    {
+    #####:  122:        printf("Unable to give Smithy. Aborting.\n\n");
+call    0 never executed
+    #####:  123:        allTestsPassed = 0;
+    #####:  124:        exit(0);
+call    0 never executed
+        -:  125:    }
+        -:  126:
+        6:  127:    for(i=0; i < testState.deckCount[thisPlayer]; i++)
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        -:  128:    {
+        5:  129:        printf("Position %d, Card: %d\n", i, testState.deck[thisPlayer][i]);
+call    0 returned 100%
+        -:  130:    }
+        -:  131:
+        1:  132:    printf("DECK COUNTED\n");
+call    0 returned 100%
+        1:  133:    printf("DISCARD COUNT -- SHOULD BE 0\n");
+call    0 returned 100%
+        -:  134:
+        1:  135:    if(testState.discardCount[thisPlayer] == 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  136:    {
+        1:  137:        printf("Discard Successful. Count successful.\n");
+call    0 returned 100%
+        -:  138:    }
+        -:  139:    else
+        -:  140:    {
+    #####:  141:        printf("Discard Count Unsuccessful.\n");
+call    0 never executed
+    #####:  142:        allTestsPassed = 0;
+        -:  143:    }
+        -:  144:
+        -:  145:    // EXPECTED: 1, 4, 1, 4, 1, 13;
+        1:  146:    int handCountExpect[] = { 1, 4, 1, 4, 1, 13 }; // 13 is smithy. MAKE SURE IT'S SMITHY!!!!
+        1:  147:    assert(testState.hand[thisPlayer][5] == smithy);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        7:  148:    for(i=0; i < testState.handCount[thisPlayer]; i++)
+branch  0 taken 86%
+branch  1 taken 14% (fallthrough)
+        -:  149:    {
+        6:  150:        printf("Position %d, card: %d\n", i, testState.hand[thisPlayer][i]);
+call    0 returned 100%
+        6:  151:        if(handCountExpect[i] != testState.hand[thisPlayer][i]);
+        -:  152:        {
+        6:  153:            allTestsPassed=0;
+        -:  154:        }
+        -:  155:    }
+        -:  156:
+        -:  157:    // Add 3 more cards to deck.
+        1:  158:    testState.deck[thisPlayer][testState.deckCount[thisPlayer] ] = gardens; // 10
+        1:  159:    testState.deckCount[thisPlayer]++;
+        1:  160:    testState.deck[thisPlayer][testState.deckCount[thisPlayer] ] = salvager; // 24
+        1:  161:    testState.deckCount[thisPlayer]++;
+        1:  162:    testState.deck[thisPlayer][testState.deckCount[thisPlayer] ] = ambassador; // 20
+        1:  163:    testState.deckCount[thisPlayer]++;
+        -:  164:
+        -:  165:    // TEST THE SMITHY
+        -:  166:
+        1:  167:    printf("Smithy Granted Hand Count: %d\n", testState.handCount[thisPlayer]);
+call    0 returned 100%
+        1:  168:    printf("Pre-Smithy Granted Hand Count: %d\n", state.handCount[thisPlayer]);
+call    0 returned 100%
+        -:  169:
+        1:  170:    playSmithy(&testState, thisPlayer, 0);
+call    0 returned 100%
+        -:  171:
+        1:  172:    if(testState.handCount[thisPlayer] == state.handCount[thisPlayer] + 4) // Should fail, bug gives only two cards. Test also factors in the fact that Smithy Card is granted.
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  173:    {
+    #####:  174:        printf("Smithy added 3 cards successfully. Test Passed.\n");
+call    0 never executed
+        -:  175:    }
+        -:  176:    else
+        -:  177:    {
+        1:  178:        printf("Smithy did not add expected number of cards.\n");
+call    0 returned 100%
+        1:  179:        printf("Expected Hand Count: %d\n", state.handCount[thisPlayer] + 4);
+call    0 returned 100%
+        1:  180:        printf("Result: %d\n", testState.handCount[thisPlayer]);
+call    0 returned 100%
+        1:  181:        allTestsPassed = 0;
+        1:  182:        smithyFail = 1;
+        -:  183:    }
+        -:  184:
+        -:  185:
+        1:  186:    printf("Testing Card Discard.\n");
+call    0 returned 100%
+        -:  187:
+        1:  188:    for(i=0; i < testState.discardCount[thisPlayer]; i++)
+branch  0 taken 0%
+branch  1 taken 100% (fallthrough)
+        -:  189:    {
+    #####:  190:        printf("Discard Card: %d\n", testState.discard[thisPlayer][i]);
+call    0 never executed
+        -:  191:    }
+        -:  192:
+        1:  193:    if(testState.deckCount[thisPlayer] == state.deckCount[thisPlayer]) // Should be even again.
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  194:    {
+        1:  195:        printf("Discard test and check passed.\n");
+call    0 returned 100%
+        -:  196:    }
+        -:  197:    else
+        -:  198:    {
+    #####:  199:        printf("Discard test and check failed.\n");
+call    0 never executed
+    #####:  200:        allTestsPassed=0;
+        -:  201:    }
+        -:  202:
+        1:  203:    printf("Checking expected seed state.\n");
+call    0 returned 100%
+        -:  204:
+        1:  205:    int seedDeckExpect[] = { 4, 4, 4, 4, 4 };
+        6:  206:    for(i=0; i < testState.deckCount[thisPlayer]; i++)
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        -:  207:    {
+        5:  208:        printf("Position %d Deck Card: %d\n", i, testState.deck[thisPlayer][i]);
+call    0 returned 100%
+        5:  209:       if(seedDeckExpect[i] != testState.deck[thisPlayer][i]) allTestsPassed=0;
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  210:    }
+        -:  211:
+        1:  212:    if(allTestsPassed) printf("Seed Deck Test Passed. State is not corrupted.\n");
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  213:    else printf("Test failed. Please check code or revise seed.\n");
+call    0 returned 100%
+        -:  214:
+        1:  215:    printf("Checking hand and seed state.\n");
+call    0 returned 100%
+        -:  216:
+        1:  217:    int seedHandExpect[] = {10, 4, 1, 4, 1, 13, 20, 24};
+        1:  218:    int seedNameExpect[] = { gardens, copper, estate, copper, estate, smithy, ambassador, salvager };
+        9:  219:    for(i=0; i < testState.handCount[thisPlayer]; i++)
+branch  0 taken 89%
+branch  1 taken 11% (fallthrough)
+        -:  220:    {
+        8:  221:        if(seedHandExpect[i] != testState.hand[thisPlayer][i])
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  222:        {
+    #####:  223:            allTestsPassed = 0;
+        -:  224:        }
+        8:  225:        if(seedHandExpect[i] != seedNameExpect[i])
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  226:        {
+    #####:  227:            allTestsPassed = 0;
+        -:  228:        }
+        -:  229:        //printf("Position %d Hand Card: %d\n", i, testState.hand[thisPlayer][i]);
+        -:  230:    }
+        -:  231:
+        1:  232:    printf("Test Passed.\n");
+call    0 returned 100%
+        -:  233:
+        1:  234:    thisPlayer = 1;
+        -:  235:    // Do the tests again.
+        1:  236:    printf("\nPlayer 2 Tests ----- Making sure everything looks good for their turn.\n\n");
+call    0 returned 100%
+        -:  237:
+        1:  238:    int copperCount = 0;
+        1:  239:    int estateCount = 0;
+        -:  240:
+        1:  241:    printf("DECK RECOUNT\n");
+call    0 returned 100%
+       11:  242:    for(i = 0; i < testState.deckCount[thisPlayer]; i++)
+branch  0 taken 91%
+branch  1 taken 9% (fallthrough)
+        -:  243:    {
+       10:  244:        printf("Position %d, Card: %d\n", i, testState.deck[thisPlayer][i]);
+call    0 returned 100%
+       10:  245:        if(testState.deck[thisPlayer][i] == copper)
+branch  0 taken 70% (fallthrough)
+branch  1 taken 30%
+        -:  246:        {
+        7:  247:            copperCount++;
+        -:  248:        }
+       10:  249:        if(testState.deck[thisPlayer][i] == estate)
+branch  0 taken 30% (fallthrough)
+branch  1 taken 70%
+        -:  250:        {
+        3:  251:            estateCount++;
+        -:  252:        }
+        -:  253:    }
+        -:  254:
+        1:  255:    if(copperCount != 7)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  256:    {
+    #####:  257:        printf("Improper copper amount. Should be 7. Result: %d\n", copperCount);
+call    0 never executed
+    #####:  258:        allTestsPassed = 0;
+        -:  259:    }
+        1:  260:    if(estateCount != 3)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  261:    {
+    #####:  262:        printf("Improper estate amount. Should be 3. Result: %d\n", estateCount);
+call    0 never executed
+    #####:  263:        allTestsPassed = 0;
+        -:  264:    }
+        -:  265:
+        -:  266:
+        1:  267:    printf("Player has 10 card count Test.\n");
+call    0 returned 100%
+        -:  268:
+        1:  269:    if(testState.deckCount[thisPlayer] == 10)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  270:    {
+        1:  271:        printf("Player has proper number of cards.\n");
+call    0 returned 100%
+        -:  272:    }
+        -:  273:    else
+        -:  274:    {
+    #####:  275:        printf("Player has improper number of cards. Should have 10.\nPlayer Has: %d\n", testState.deckCount[thisPlayer]);
+call    0 never executed
+    #####:  276:        allTestsPassed = 0;
+        -:  277:    }
+        -:  278:
+        1:  279:    testState.hand[thisPlayer][testState.handCount[thisPlayer]] = smithy;
+        1:  280:    testState.handCount[thisPlayer]++;
+        1:  281:    if(state.handCount[thisPlayer] + 1 == testState.handCount[thisPlayer])
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  282:    {
+        1:  283:        printf("Smithy properly granted to player and player card count incremented.\n");
+call    0 returned 100%
+        -:  284:    }
+        -:  285:    else
+        -:  286:    {
+    #####:  287:        printf("Smithy was either improperly granted or card count not incremented.\n");
+call    0 never executed
+    #####:  288:        allTestsPassed=0;
+        -:  289:    }
+        -:  290:
+        -:  291:    // Ensure the victory card count is the same.
+        -:  292:
+        1:  293:    assert(testState.supplyCount[estate] == 8);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  294:    assert(testState.supplyCount[estate] == 8);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  295:    assert(testState.supplyCount[estate] == 8);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  296:    assert(points[0] == 8);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  297:    assert(points[1] == 24);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  298:    assert(points[2] == 48);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:  299:
+        1:  300:    if(allTestsPassed) printf("No state changes, all tests passed.\n\n");
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  301:    else printf("One or more tests failed. Please review outputs and revise code.\n");
+call    0 returned 100%
+        1:  302:    if(smithyFail)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  303:    {
+        1:  304:        printf("Smithy card did not work properly. Please revise code.\n");
+call    0 returned 100%
+        1:  305:        printf("Smithy gave: %d\n", testState.handCount[0]);
+call    0 returned 100%
+        1:  306:        printf("Expected: %d\n", state.handCount[0] + 4);
+call    0 returned 100%
+        -:  307:    }
+        -:  308:
+        1:  309:    return 0;
+        -:  310:}

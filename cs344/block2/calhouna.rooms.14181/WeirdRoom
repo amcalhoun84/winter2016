@@ -1,0 +1,6 @@
+ROOM NAME: WeirdRoom
+ROOM DESCRIPTION: You are outside a white house, in an open field. There is a mailbox here.
+CONNECTION 1: Sluice
+CONNECTION 2: OutsideHouse
+CONNECTION 3: MtDoom
+ROOM TYPE: END_ROOM

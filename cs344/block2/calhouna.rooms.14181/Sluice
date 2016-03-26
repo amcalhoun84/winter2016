@@ -1,0 +1,8 @@
+ROOM NAME: Sluice
+ROOM DESCRIPTION: A beautiful Elven holdfast, a delicate and reassuring melody echoes through the air.
+CONNECTION 1: WeirdRoom
+CONNECTION 2: Fizzbuzz
+CONNECTION 3: MtDoom
+CONNECTION 4: Forest
+CONNECTION 5: OutsideHouse
+ROOM TYPE: START_ROOM

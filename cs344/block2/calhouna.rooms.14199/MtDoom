@@ -1,0 +1,8 @@
+ROOM NAME: MtDoom
+ROOM DESCRIPTION: A beautiful Elven holdfast, a delicate and reassuring melody echoes through the air.
+CONNECTION 1: ZotRoom
+CONNECTION 2: LoudRoom
+CONNECTION 3: OutsideHouse
+CONNECTION 4: Lothlorien
+CONNECTION 5: GrueCave
+ROOM TYPE: START_ROOM

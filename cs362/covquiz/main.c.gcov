@@ -1,0 +1,312 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include<stdio.h>
+        -:    2:#include<stdlib.h>
+        -:    3:#include "bst.h"
+        -:    4:#include "structs.h"
+        -:    5:
+        -:    6:/* Example main file to begin exercising your tree */
+        -:    7:
+        -:    8:/*
+        -:    9:Functions to test
+        -:   10:
+        -:   11:struct Node *_addNode(struct Node *cur, TYPE val)
+        -:   12:int containsBSTree(struct BSTree *tree, TYPE val)
+        -:   13:TYPE _leftMost(struct Node *cur)
+        -:   14:struct Node *_removeLeftMost(struct Node *cur)
+        -:   15:struct Node *_removeNode(struct Node *cur, TYPE val)
+        -:   16:*/
+        -:   17:
+        -:   18:
+        -:   19:struct Node {
+        -:   20:	TYPE         val;
+        -:   21:	struct Node *left;
+        -:   22:	struct Node *right;
+        -:   23:};
+        -:   24:
+        -:   25:struct BSTree {
+        -:   26:	struct Node *root;
+        -:   27:	int          cnt;
+        -:   28:};
+        -:   29:
+        -:   30:TYPE _leftMost(struct Node *cur);
+        -:   31:struct Node *_removeLeftMost(struct Node *cur);
+        -:   32:struct Node *_removeNode(struct Node *cur, TYPE val);
+        -:   33:
+        4:   34:struct BSTree *buildBSTTree() {
+        -:   35:    /*     50
+        -:   36:         13  110
+        -:   37:        10 
+        -:   38:    */
+        4:   39:    struct BSTree *tree	= newBSTree();		
+        -:   40:		
+        -:   41:	/*Create value of the type of data that you want to store*/
+        4:   42:	struct data *myData1 = (struct data *) malloc(sizeof(struct data));
+        4:   43:	struct data *myData2 = (struct data *) malloc(sizeof(struct data));
+        4:   44:	struct data *myData3 = (struct data *) malloc(sizeof(struct data));
+        4:   45:	struct data *myData4 = (struct data *) malloc(sizeof(struct data));
+        -:   46:		
+        4:   47:	myData1->number = 50;
+        4:   48:	myData1->name = "rooty";
+        4:   49:	myData2->number = 13;
+        4:   50:	myData2->name = "lefty";
+        4:   51:	myData3->number = 110;
+        4:   52:	myData3->name = "righty";
+        4:   53:	myData4->number = 10;
+        4:   54:	myData4->name = "lefty of lefty";
+        -:   55:	
+        -:   56:	/*add the values to BST*/
+        4:   57:	addBSTree(tree, myData1);
+        4:   58:	addBSTree(tree, myData2);
+        4:   59:	addBSTree(tree, myData3);
+        4:   60:	addBSTree(tree, myData4);
+        -:   61:    
+        4:   62:    return tree;
+        -:   63:}
+        -:   64:
+        -:   65:
+        1:   66:void testAddNode() {
+        1:   67:    struct BSTree *tree	= newBSTree();
+        -:   68:    
+        -:   69:    struct data myData1;
+        -:   70:	struct data myData2;
+        -:   71:	struct data myData3;
+        -:   72:	struct data myData4;
+        -:   73:		
+        1:   74:	myData1.number = 50;
+        1:   75:	myData1.name = "rooty";
+        1:   76:    addBSTree(tree, &myData1);
+        -:   77:    
+        -:   78:    
+        1:   79:    if (compare(tree->root->val, (TYPE *) &myData1) != 0) {
+    #####:   80:        printf("addNode() test: FAIL to insert 50 as root\n");
+    #####:   81:        return;
+        -:   82:    }
+        1:   83:    else if (tree->cnt != 1) {
+    #####:   84:        printf("addNode() test: FAIL to increase count when inserting 50 as root\n");
+    #####:   85:        return;
+        -:   86:    }
+        1:   87:    else printf("addNode() test: PASS when adding 50 as root\n");
+        -:   88:    
+        -:   89:    
+        1:   90:	myData2.number = 13;
+        1:   91:	myData2.name = "lefty";
+        1:   92:    addBSTree(tree, &myData2);
+        -:   93:    
+        -:   94:    
+        1:   95:    if (compare(tree->root->left->val, (TYPE *) &myData2) != 0) {
+    #####:   96:        printf("addNode() test: FAIL to insert 13 as left child of root\n");
+    #####:   97:        return;
+        -:   98:    }
+        1:   99:    else if (tree->cnt != 2) {
+    #####:  100:        printf("addNode() test: FAIL to increase count when inserting 13 as left of root\n");
+    #####:  101:        return;
+        -:  102:    }
+        1:  103:    else printf("addNode() test: PASS when adding 13 as left of root\n");
+        -:  104:    
+        -:  105:    
+        1:  106:	myData3.number = 110;
+        1:  107:	myData3.name = "righty";
+        1:  108:    addBSTree(tree, &myData3);
+        -:  109:        
+        -:  110:        
+        1:  111:    if (compare(tree->root->right->val, (TYPE *) &myData3) != 0) {
+    #####:  112:        printf("addNode() test: FAIL to insert 110 as right child of root\n");
+    #####:  113:        return;
+        -:  114:    }
+        1:  115:    else if (tree->cnt != 3) {
+    #####:  116:        printf("addNode() test: FAIL to increase count when inserting 110 as right of root\n");
+    #####:  117:        return;
+        -:  118:    }
+        1:  119:    else printf("addNode() test: PASS when adding 110 as right of root\n");
+        -:  120:    
+        -:  121:    
+        1:  122:	myData4.number = 10;
+        1:  123:	myData4.name = "righty of lefty";
+        1:  124:	addBSTree(tree, &myData4);
+        -:  125:    
+        1:  126:    if (compare(tree->root->left->left->val, (TYPE *) &myData4) != 0) {
+    #####:  127:        printf("addNode() test: FAIL to insert 10 as left child of left of root\n");
+    #####:  128:        return;
+        -:  129:    }
+        1:  130:    else if (tree->cnt != 4) {
+    #####:  131:        printf("addNode() test: FAIL to increase count when inserting 10 as left of left of root\n");
+    #####:  132:        return;
+        -:  133:    }
+        1:  134:    else printf("addNode() test: PASS when adding 10 as left of left of root\n");
+        -:  135:}
+        -:  136:
+        -:  137:
+        1:  138:void testContainsBSTree() {
+        1:  139:    struct BSTree *tree = buildBSTTree();
+        -:  140:    
+        -:  141:    struct data myData1;
+        -:  142:	struct data myData2;
+        -:  143:	struct data myData3;
+        -:  144:	struct data myData4;
+        -:  145:	struct data myData5;
+        -:  146:	
+        1:  147:	myData1.number = 50;
+        1:  148:	myData1.name = "rooty";
+        1:  149:	myData2.number = 13;
+        1:  150:	myData2.name = "lefty";
+        1:  151:	myData3.number = 110;
+        1:  152:	myData3.name = "righty";
+        1:  153:	myData4.number = 10;
+        1:  154:	myData4.name = "lefty of lefty";
+        1:  155:    myData5.number = 111;
+        1:  156:	myData5.name = "not in tree";
+        -:  157:    
+        -:  158:    
+        1:  159:    if (containsBSTree(tree, &myData1))
+        1:  160:        printf("containsBSTree(): PASS when test containing 50 as root\n");
+        -:  161:    else
+    #####:  162:        printf("containsBSTree(): FAIL when test containing 50 as root\n");
+        -:  163:        
+        1:  164:    if (containsBSTree(tree, &myData2))
+        1:  165:        printf("containsBSTree(): PASS when test containing 13 as left of root\n");
+        -:  166:    else
+    #####:  167:        printf("containsBSTree(): FAIL when test containing 13 as left of root\n");
+        -:  168:        
+        -:  169:        
+        1:  170:    if (containsBSTree(tree, &myData3))
+        1:  171:        printf("containsBSTree(): PASS when test containing 110 as right of root\n");
+        -:  172:    else
+    #####:  173:        printf("containsBSTree(): FAIL when test containing 110 as right of root\n");
+        -:  174:        
+        1:  175:    if (containsBSTree(tree, &myData4))
+        1:  176:        printf("containsBSTree(): PASS when test containing 10 as left of left of root\n");
+        -:  177:    else
+    #####:  178:        printf("containsBSTree(): FAIL when test containing 10 as left of left of root\n");
+        -:  179:        
+        1:  180:    if (!containsBSTree(tree, &myData5))
+        1:  181:        printf("containsBSTree(): PASS when test containing 111, which is not in the tree\n");
+        -:  182:    else
+    #####:  183:        printf("containsBSTree(): FAIL when test containing 111, which shouldn't be in the tree.\n");
+        1:  184:}
+        -:  185:
+        -:  186:
+        1:  187:void testLeftMost() {
+        1:  188:    struct BSTree *tree = buildBSTTree();
+        -:  189:    
+        -:  190:    struct data myData1;
+        -:  191:	struct data myData2;
+        -:  192:	struct data myData3;
+        -:  193:	struct data myData4;
+        -:  194:		
+        1:  195:	myData1.number = 50;
+        1:  196:	myData1.name = "rooty";
+        1:  197:	myData2.number = 13;
+        1:  198:	myData2.name = "lefty";
+        1:  199:	myData3.number = 110;
+        1:  200:	myData3.name = "righty";
+        1:  201:	myData4.number = 10;
+        1:  202:	myData4.name = "lefty of lefty";
+        -:  203:    
+        1:  204:    if (compare(_leftMost(tree->root), &myData4) == 0)
+        1:  205:        printf("_leftMost(): PASS left most of root\n");
+        -:  206:    else
+    #####:  207:        printf("_leftMost(): FAIL left most of root\n");
+        -:  208:    
+        1:  209:    if (compare(_leftMost(tree->root->left), &myData4) == 0)
+        1:  210:        printf("_leftMost(): PASS left most of left of root\n");
+        -:  211:    else
+    #####:  212:        printf("_leftMost(): FAIL left most of left of root\n");
+        -:  213:        
+        1:  214:    if (compare(_leftMost(tree->root->left->left), &myData4) == 0)
+        1:  215:        printf("_leftMost(): PASS left most of left of left of root\n");
+        -:  216:    else
+    #####:  217:        printf("_leftMost(): FAIL left most of left of left of root\n");
+        -:  218:    
+        1:  219:    if (compare(_leftMost(tree->root->right), &myData3) == 0)
+        1:  220:        printf("_leftMost(): PASS left most of right of root\n");
+        -:  221:    else
+    #####:  222:        printf("_leftMost(): FAIL left most of right of root\n");
+        1:  223:}
+        -:  224:
+        -:  225:
+        1:  226:void testRemoveLeftMost() {
+        1:  227:    struct BSTree *tree = buildBSTTree();
+        -:  228:    struct Node *cur;
+        -:  229:    
+        1:  230:    cur = _removeLeftMost(tree->root);
+        1:  231:    if (cur == tree->root)
+        1:  232:        printf("_removeLeftMost: PASS removing leftmost of root 1st try\n");
+        -:  233:    else 
+    #####:  234:        printf("_removeLeftMost: FAIL removing leftmost of root 1st try\n");
+        -:  235:    
+        1:  236:    cur = _removeLeftMost(tree->root->right);
+        1:  237:    if (cur == NULL)
+        1:  238:        printf("_removeLeftMost: PASS removing leftmost of right of root 1st try\n");
+        -:  239:    else 
+    #####:  240:        printf("_removeLeftMost: FAIL removing leftmost of right of root 1st try\n");
+        -:  241:        
+        -:  242:    
+        1:  243:    cur = _removeLeftMost(tree->root);
+        1:  244:    if (cur == tree->root)
+        1:  245:        printf("_removeLeftMost: PASS removing leftmost of root 2st try\n");
+        -:  246:    else 
+    #####:  247:        printf("_removeLeftMost: FAIL removing leftmost of root 2st try\n");
+        -:  248:    
+        1:  249:}
+        -:  250:
+        -:  251:
+        1:  252:void testRemoveNode() {
+        1:  253:    struct BSTree *tree = buildBSTTree();
+        -:  254:    struct Node *cur;
+        -:  255:    struct data myData1;
+        -:  256:	struct data myData2;
+        -:  257:	struct data myData3;
+        -:  258:	struct data myData4;
+        -:  259:		
+        1:  260:	myData1.number = 50;
+        1:  261:	myData1.name = "rooty";
+        1:  262:	myData2.number = 13;
+        1:  263:	myData2.name = "lefty";
+        1:  264:	myData3.number = 110;
+        1:  265:	myData3.name = "righty";
+        1:  266:	myData4.number = 10;
+        1:  267:	myData4.name = "lefty of lefty";
+        -:  268:    
+        1:  269:    _removeNode(tree->root, &myData4);
+        2:  270:    if (compare(tree->root->val, &myData1) == 0 && tree->root->left->left == NULL)
+        1:  271:        printf("_removeNode(): PASS remove left of left of root 1st try\n");
+        -:  272:    else
+    #####:  273:        printf("_removeNode(): FAIL remove left of left of root 1st try\n");
+        -:  274:        
+        1:  275:    _removeNode(tree->root, &myData3);
+        2:  276:    if (compare(tree->root->val, &myData1) == 0 && tree->root->right == NULL)
+        1:  277:        printf("_removeNode(): PASS remove right of root 2st try\n");
+        -:  278:    else
+    #####:  279:        printf("_removeNode(): FAIL remove right of root 2st try\n");
+        -:  280:    
+        1:  281:    _removeNode(tree->root, &myData2);
+        2:  282:    if (compare(tree->root->val, &myData1) == 0 && tree->root->left == 0)
+        1:  283:        printf("_removeNode(): PASS remove left of root 3st try\n");
+        -:  284:    else
+    #####:  285:        printf("_removeNode(): FAIL remove left of root 3st try\n");
+        -:  286:        
+        1:  287:    cur = _removeNode(tree->root, &myData1);
+        1:  288:    if (cur == NULL)
+        1:  289:        printf("_removeNode(): PASS remove root 4st try\n");
+        -:  290:    else
+    #####:  291:        printf("_removeNode(): FAIL remove root 4st try\n");
+        -:  292:        
+        1:  293:}
+        -:  294:
+        -:  295:
+        1:  296:int main(int argc, char *argv[])
+        -:  297:{	
+        1:  298:    testAddNode();
+        1:  299:    testContainsBSTree();
+        1:  300:    testLeftMost();
+        1:  301:    testRemoveLeftMost();
+        1:  302:    testRemoveNode();
+        1:  303:    return 0;
+        -:  304:}
+        -:  305:
+        -:  306:
+        -:  307:

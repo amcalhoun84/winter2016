@@ -1,0 +1,8 @@
+ROOM NAME: MtDoom
+ROOM DESCRIPTION: Oh no! The classic computer science student program! Run!
+CONNECTION 1: OutsideHouse
+CONNECTION 2: Sluice
+CONNECTION 3: Lothlorien
+CONNECTION 4: WeirdRoom
+CONNECTION 5: Fizzbuzz
+ROOM TYPE: MID_ROOM

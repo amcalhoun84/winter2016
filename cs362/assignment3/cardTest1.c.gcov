@@ -1,0 +1,253 @@
+        -:    0:Source:cardTest1.c
+        -:    0:Graph:cardTest1.gcno
+        -:    0:Data:cardTest1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// UNIT TEST - ASSIGNMENT 3
+        -:    3:// unitTest1.c
+        -:    4:// Unit Test for card function -- ADVENTURER.
+        -:    5:// cardtest1: cardtest1.c dominion.o rngs.o
+        -:    6://       gcc -o cardtest1 -g  cardtest1.c dominion.o rngs.o $(CFLAGS)
+        -:    7:
+        -:    8:
+        -:    9:
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include "rngs.h"
+        -:   13:#include <string.h>
+        -:   14:#include <stdio.h>
+        -:   15:#include <assert.h>
+        -:   16:#include <time.h>
+        -:   17:#include <stdlib.h>
+        -:   18:#include <math.h>
+        -:   19:#include <stdlib.h>
+        -:   20:
+        -:   21:#define DEBUG 0
+        -:   22:#define NOISY_TEST 1
+        -:   23:#define TESTCARD "adventurer"
+        -:   24:
+        -:   25:/*
+        -:   26:
+        -:   27:int playAdventurer(struct gameState *state, int currentPlayer, int cardDrawn, int drawntreasure, int temphand[], int z)
+        -:   28:{
+        -:   29:
+        -:   30:      while(drawntreasure<2){
+        -:   31:	if (state->deckCount[currentPlayer] <=1)
+        -:   32:        {//if the deck is empty we need to shuffle discard and add to deck *** REFACTOR to <= will cause additional shuffling.
+        -:   33:	  shuffle(currentPlayer, state);
+        -:   34:        }
+        -:   35:        drawCard(currentPlayer, state);
+        -:   36:        cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
+        -:   37:        if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+        -:   38:	  drawntreasure+=2; // The adventurer should not make off with your treasure. Originally had this put as --, but it actually caused the game to freeze. Opted to give the player more coins. Changes seeded outcomes.
+        -:   39:	else{
+        -:   40:	  temphand[z]=cardDrawn;
+        -:   41:	  state->handCount[currentPlayer]++; //this should just remove the top card (the most recently drawn one).
+        -:   42:	  z++;
+        -:   43:	}
+        -:   44:      }
+        -:   45:      while(z-1>=0){
+        -:   46:	state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
+        -:   47:	z=z-1;
+        -:   48:      }
+        -:   49:      return 0;
+        -:   50:}
+        -:   51:
+        -:   52:*/
+        -:   53:
+function checkPlayAdventurer called 20 returned 100% blocks executed 39%
+       20:   54:int checkPlayAdventurer(struct gameState *state, int currentPlayer, int cardDrawn, int drawnTreasure, int temphand[], int z)
+        -:   55:{
+       20:   56:    int preDraw, failTest = 0;
+        -:   57:    // int x;
+        -:   58:    struct gameState testState;
+       20:   59:    memcpy(&testState, state, sizeof(struct gameState));
+        -:   60:
+       20:   61:    printf("\nChecking Drawn Treasure.\nDrawn Treasure: %d\n", drawnTreasure);
+call    0 returned 100%
+        -:   62:
+       20:   63:    printf("Initiating randomized deckCount: 1-5\n");
+call    0 returned 100%
+       20:   64:    state->deckCount[currentPlayer] = rand() % 3;
+call    0 returned 100%
+        -:   65:
+       20:   66:    printf("Deck Count: %d\n", state->deckCount[currentPlayer]);
+call    0 returned 100%
+        -:   67:
+       20:   68:    preDraw = drawnTreasure;
+        -:   69:
+       40:   70:    while(drawnTreasure < 2)   // less than two drawn treasure...
+branch  0 taken 0%
+branch  1 taken 100% (fallthrough)
+        -:   71:    {
+    #####:   72:        if(state->deckCount[currentPlayer] <= 1)
+branch  0 never executed
+branch  1 never executed
+        -:   73:        {
+    #####:   74:            shuffle(currentPlayer, &testState);
+call    0 never executed
+    #####:   75:            if(state->deckCount[currentPlayer] == 0)
+branch  0 never executed
+branch  1 never executed
+        -:   76:            {
+    #####:   77:                printf("Deck shuffled at 0 properly. Test Passed.\n");
+call    0 never executed
+        -:   78:            }
+        -:   79:            else
+        -:   80:            {
+    #####:   81:                printf("Deck shuffled at 1. Test Failed.\n");
+call    0 never executed
+    #####:   82:                failTest = 1;
+        -:   83:            }
+    #####:   84:            drawCard(currentPlayer, &testState);
+call    0 never executed
+    #####:   85:            cardDrawn = testState.hand[currentPlayer][state->handCount[currentPlayer]-1];
+    #####:   86:            if(cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+        -:   87:            {
+    #####:   88:                drawnTreasure+=2;   // will add too much treasure. Will always fail.
+    #####:   89:                if(preDraw++ == drawnTreasure)
+branch  0 never executed
+branch  1 never executed
+        -:   90:                {
+    #####:   91:                    printf("Treasure Draw Check Passed");
+call    0 never executed
+        -:   92:                }
+        -:   93:                else
+        -:   94:                {
+    #####:   95:                    printf("Treasure Draw Check Failed.");
+call    0 never executed
+    #####:   96:                    failTest = 1;
+        -:   97:                }
+        -:   98:
+        -:   99:
+        -:  100:            }
+        -:  101:            else
+        -:  102:            {
+    #####:  103:                temphand[z] = cardDrawn;
+    #####:  104:                testState.handCount[currentPlayer]++;
+    #####:  105:                z++;
+        -:  106:            }
+        -:  107:
+        -:  108:        }
+        -:  109:
+        -:  110:        else
+        -:  111:        {
+    #####:  112:            printf("No shuffle. Test Passed.\n");
+call    0 never executed
+    #####:  113:            break;
+        -:  114:            // shuffled = 0;
+        -:  115:        }
+        -:  116:    }
+        -:  117:
+       20:  118:    printf("Testing Coins. Should only add 1\n\n");
+call    0 returned 100%
+       20:  119:    if(testState.coins == state->coins++)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  120:    {
+       20:  121:        printf("State Coin Test passed.\n");
+call    0 returned 100%
+        -:  122:    }
+        -:  123:    else
+        -:  124:    {
+    #####:  125:        printf("State Coin Test failed.\n");
+call    0 never executed
+    #####:  126:        failTest = 1;
+        -:  127:    }
+        -:  128:
+        -:  129:
+       20:  130:    printf("Previous Hand Count: %d\n", state->handCount[currentPlayer]);
+call    0 returned 100%
+       20:  131:    printf("Current Hand Count: %d\n", testState.handCount[currentPlayer]);
+call    0 returned 100%
+        -:  132:
+       40:  133:    while(z-1>=0){
+branch  0 taken 0%
+branch  1 taken 100% (fallthrough)
+    #####:  134:	state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
+    #####:  135:	z=z-1;
+        -:  136:    }
+        -:  137:
+       20:  138:    return failTest;
+        -:  139:}
+        -:  140:
+function main called 1 returned 100% blocks executed 91%
+        1:  141:int main()
+        -:  142:{
+        -:  143:    // Set up the test harness.
+        -:  144:
+        1:  145:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        1:  146:    int x, i, testSuiteSuccess = 0, testSuiteFailure = 0, testsRun = 0;
+        1:  147:    int seed = 1000; // Perhaps having a set seed would standardize testing, but we need ALL situations tested, even those we don't anticipate.
+        1:  148:    int k[10] = { adventurer, smithy, village, baron, great_hall, council_room, salvager, sea_hag, gardens, mine };
+        -:  149:    // const char *cards[] = { "curse", "estate", "duchy", "province", "copper", "silver", "gold", "adventurer", "council_room", "feast", "gardens", "mine", "remodel", "smithy", "village", "baron",
+        -:  150:    // "great_hall", "minion", "steward", "tribute", "ambassador", "cutpurse", "embargo", "outpost", "salvager", "sea_hag", "treasure_map" };
+        1:  151:    int randomCard = 0; //rand() % 10;
+        1:  152:    int z = 0;
+        1:  153:    int drawnTreasure = rand() % 3;
+call    0 returned 100%
+        -:  154:
+        1:  155:    struct gameState *post = malloc(sizeof(struct gameState));
+        -:  156:    int temphand[MAX_HAND];
+        1:  157:    initializeGame(2, k, seed, post);
+call    0 returned 100%
+        -:  158:
+      501:  159:    for(i=0; i < MAX_HAND; i++)
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:  160:    {
+      500:  161:        if(i < 2)
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+        -:  162:        {
+        2:  163:           temphand[i] = copper;
+        -:  164:        }
+        -:  165:        else
+        -:  166:        {
+      498:  167:            temphand[i] = k[i];
+        -:  168:        }
+        -:  169:    }
+        -:  170:
+        1:  171:    printf("Testing Adventurer!\n");
+call    0 returned 100%
+       21:  172:    for(i=0; i < 20; i++)
+branch  0 taken 95%
+branch  1 taken 5% (fallthrough)
+        -:  173:    {
+       20:  174:        x = checkPlayAdventurer(post, 0, randomCard, drawnTreasure, temphand, z);
+call    0 returned 100%
+       20:  175:        if(x)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:  176:        {
+    #####:  177:            printf("One or More Assertion and Gameplay Tests Failed.\n");
+call    0 never executed
+    #####:  178:            testSuiteFailure++;
+    #####:  179:            testsRun++;
+        -:  180:        }
+        -:  181:        else
+        -:  182:        {
+       20:  183:            printf("All Assertion and Gameplay Tests Passed!\n");
+call    0 returned 100%
+       20:  184:            testSuiteSuccess++;
+       20:  185:            testsRun++;
+        -:  186:        }
+        -:  187:    }
+        -:  188:
+        1:  189:    printf("Successes / Tests Run: %d / %d\n", testSuiteSuccess, testsRun);
+call    0 returned 100%
+        1:  190:    printf("Failures / Tests Run: %d / %d\n", testSuiteFailure, testsRun);
+call    0 returned 100%
+        -:  191:
+        1:  192:    free(post);
+        1:  193:    return 0;
+        -:  194:}

@@ -1,0 +1,7 @@
+ROOM NAME: Lothlorien
+ROOM DESCRIPTION: Light dapples the ground as the sun shines through pine trees. You hear a song bird in the distance.
+CONNECTION 1: Fizzbuzz
+CONNECTION 2: Forest
+CONNECTION 3: OutsideHouse
+CONNECTION 4: MtDoom
+ROOM TYPE: MID_ROOM

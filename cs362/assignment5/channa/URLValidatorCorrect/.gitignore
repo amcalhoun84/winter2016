@@ -1,0 +1,5 @@
+# bin folder
+bin/
+
+# To experiment with UrlValidatorCorrect
+src/UrlValidatorExample.java

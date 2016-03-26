@@ -1,0 +1,255 @@
+#!/bin/bash
+# PROGRAM 1 - STATS
+# CS344-400
+# By Andrew M. Calhoun
+# Due 1/25/2016
+
+# Description:
+# Welcome to Shell Scripting. We have been asked to use
+# the Bourne Shell Script to calculate averages and  medians for
+# a given set or input set of numbers whether from a file or stdin.
+# This is an introduction to the general world of LINUX scripting.
+# Each input file will have whole numbers (no floating point/decimals/fractions please!!!!)
+# and each number is separated by tabs. Each line must also have the same number of values.
+# The script will calculate the average and median across and down rows and columns.
+
+# Arrays are created for the purposes of the column calculations. Was far easier to display them 
+# in array format than any other way that I experimented with.
+
+# There are commented out echos to show debugging process.
+
+# TEMPORARY FILE DUMP
+
+TMP1=./TMP1  # For Rows File -- NOT USED IN THIS VERSION
+TMP2=./TMP2  # For Columns File
+TMP3=./TMP3  ## This is your custom-made file.
+
+
+# Remove the Temporary files. http://stackoverflow.com/questions/687014/removing-created-temp-files-in-unexpected-bash-exit
+trap "rm -rf $TMP1 $TMP2 $TMP3; exit 1" INT HUP TERM 
+
+#############
+# VARIABLES #
+#############
+
+# Useful numbers and variables - GLOBALS
+
+
+file=""  # Our input file.
+
+#Rows and Columns
+average=0   # Average - sum of numbers / total numbers - start at 0.
+median=0    # Whatever the middle number is if number of numbers is odd, or the middle two divided by two if even. 
+sum=0	   #initiate sum globally
+count=0	   #initiate count globally
+numRows=0
+divisor_check=0
+
+
+calculate_average()
+{
+	sortedArray=($(printf '%s\n' "${rows[@]}"|sort -n))
+
+		#Calculate the Average
+			# Averages are generally calculated by sum / count. https://www.mathsisfun.com/mean.html
+
+			for i in "${rows[@]}"
+			do
+				sum=`expr $sum + $i`
+				count=`expr $count + 1`
+			done
+
+	average=`expr $sum / $count`
+
+	#round up. 
+			#Rounding up -- this is necessary because expr doesn't handle floating point numbers very well w/o bc. But we want to keep things simple.
+			# http://stackoverflow.com/questions/1253987/how-to-use-expr-on-float
+	divisor_check=`expr $sum % $count`
+	rounding=`expr $divisor_check \* 2`
+
+	if [[ "$rounding" -ge "$count" ]]
+		then
+			average=`expr $average + 1`
+		fi
+
+		averageArray+="$average 	"
+};
+
+calculate_median()
+{
+	
+			rounding_mod=`expr $sum % $count`
+			# echo "Rounding Mod: $rounding_mod" # DEBUGGING
+			rounding_result=`expr $rounding_mod \* 2`  # Need the escape slash, otherwise there is an error message.
+			# echo "Rounding Result: $rounding_result"
+
+			# Calculate the median.
+				# Medians are found with a somewhat complicated formula -- it's better explained at: https://www.mathsisfun.com/median.html
+
+			# echo "Count: $count" # For Debugging
+			mod_check=`expr $count % 2`
+			# echo "ModCheck: $mod_check"
+			
+			if [[ $mod_check -eq 1 ]]
+				then
+					index=`expr $count / 2`
+					median=${sortedArray[$index]}
+					medianArray+="${sortedArray[$index]}	"  
+
+				else
+					index=`expr $count / 2`
+					index=`expr $index + 1`
+					median=${sortedArray[$index]}
+					medianArray+="${sortedAray[$index]}		"
+					
+					# This is the actual formula for finding a true median, but instructions 
+					# requested that we do the highest of the two in the case of even number of numbers for the median. 
+					
+					# ////////				
+					# index1=`expr $count / 2 - 1`
+					# # echo "Index 1: $index1" # For Debugging
+					# index2=`expr $count / 2`
+					# # echo "Index 2: $index2"
+					# median1=${sortedArray[$index1]}
+					# # echo "Median 1: $median1"
+					# median2=${sortedArray[$index2]}
+					# # echo "Median 2: $median2"
+					# median=`expr $median1 + $median2`
+					# median=`expr $median / 2`
+			
+				fi
+};
+
+calculate_rows()
+{
+	echo "Average 	Median"
+	while read -a rows # Tried to read it without the -a when using an array. Did not work out very well. http://ss64.com/bash/read.html
+	do
+			calculate_average
+			calculate_median
+			# average=`expr $sum / $count`
+
+
+			echo "$average 		$median"
+
+			# Start it all over!
+			count=0
+			sum=0
+			average=0
+
+	done < $file
+};
+
+calculate_columns()
+{
+	# This should be similar to the rows, except we are adding up columns instead of rows. So, there will be some adjust-a-mentes. 
+	
+	# Need to get the number of columns first!
+	# echo "TEST OF COLUMNS"
+
+	noc=($(head -n 1 $file | wc -w)) # find the number of columns in the file, using the word count. - noc = number_of_columns
+	
+	# echo "Number of Columns: $noc"
+
+	# Read the numbers for each line
+
+	# Use of sequence: http://linux.die.net/man/1/seq / http://ss64.com/bash/seq.html
+
+	for i in $(seq 1 $noc)
+		do
+
+			# use of cut -- documentation found here: http://ss64.com/bash/cut.html
+			# example found and adapted from: http://www.thegeekstuff.com/2013/06/cut-command-examples/
+
+			vpl=$(cut -f $i $file | tr "\t" "\n" | sort -n)
+			echo $vpl >> $TMP2  # take everything and put it into a temporary file for processing.
+  	 	
+	    done
+		
+		file=$TMP2
+
+		cat $file
+
+		while read -a rows
+		do
+
+			calculate_average
+			calculate_median
+	
+			count=0
+			sum=0
+			average=0
+
+		done < $file
+
+
+				
+		echo -e "Average"
+		echo "$averageArray"
+
+
+		echo -e "Median"
+		echo "$medianArray"
+	
+};
+
+
+calculate_stdin()
+{
+	#formats standard input into a file to be processed by the row and column functions.
+	echo "Please enter in numbers seperated by a space or tab, one row at a time and hit enter."
+	echo "When done, please hit CTRL-D (^D)."
+
+	while read line
+	do
+		echo -e "$line" >> $TMP3
+
+	done < /dev/stdin
+
+	file=$TMP3
+};
+
+# "MAIN" function
+# checks number format as well as arguments, and then offers a suggestion for
+# how to properly operate the program. If You have 1 argument, you get referred to
+# standardized input, otherwise you pull from the file.
+
+
+if [[ $# -eq 2 ]]
+	then
+		file=$2
+elif [[ $# -eq 1 ]]
+	then
+		calculate_stdin
+else
+		echo "Usage: stats {-rows|-cols} [file]" 1>&2
+		exit 1
+fi 
+
+# Check to see if the file is readable. If not, display a message.
+
+if [ ! -r "$file" ] 
+	then
+	echo "stats: cannot read $2" 1>&2
+	exit 1
+fi
+
+# Argument Check
+
+if [[ "$1" == -r* ]]
+	then
+		calculate_rows
+elif [[ "$1" == -c* ]]
+	then
+		calculate_columns
+	else
+		echo "Usage: stats {-rows|-cols} [file]" 1>&2
+		exit 1
+
+fi
+
+# Clean up TMP files.
+
+rm -f $TMP $TMP2 $TMP3
+
+exit 0 # Exit the program without a return.

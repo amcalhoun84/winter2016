@@ -1,0 +1,33 @@
+#!/bin/bash
+
+sum=0
+count=0
+average=0
+numbersTest=./numbersTest
+
+
+echo "Type in numbers. Hit Ctrl+C when done."
+
+read myLine
+
+while read myLine
+
+do
+        # echo $myLine
+
+
+        for i in $myLine
+        do
+                echo $i >> $numbersTest
+                num=$i
+                echo "$i : $num"
+                count=`expr $count + 1`
+                sum=`expr $sum + $num`
+        done
+
+        average=`expr $sum / $count`
+
+        echo "Count: $count"
+        echo "Sum: $sum"
+        echo "Average: $average"
+done               

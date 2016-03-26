@@ -1,0 +1,8 @@
+ROOM NAME: LoudRoom
+ROOM DESCRIPTION: It's dark and dank in here. You also feel like you just might get eaten by a grue.
+CONNECTION 1: OutsideHouse
+CONNECTION 2: Lothlorien
+CONNECTION 3: GrueCave
+CONNECTION 4: MtDoom
+CONNECTION 5: ZotRoom
+ROOM TYPE: MID_ROOM

@@ -1,0 +1,12 @@
+total 80
+drwxrwx---. 10 calhouna upg58272 1024 Mar 14 14:19 ./
+drwx--x--x. 19 calhouna upg58272 2048 Mar 10 20:34 ../
+drwxrwx---.  3 calhouna upg58272 2048 Jan 24 21:43 block1/
+drwxrwx---. 13 calhouna upg58272 5120 Feb  6 16:04 block2/
+drwxrwx---.  2 calhouna upg58272 1024 Feb 28 13:44 block3/
+drwxrwx---.  2 calhouna upg58272 1024 Mar  9 15:41 block4/
+drwxrwx---.  2 calhouna upg58272 2048 Mar 10 20:04 bu-block4/
+drwxrwx---.  2 calhouna upg58272 1024 Mar 14 12:55 doubleCheck/
+-rw-rw----.  1 calhouna upg58272    0 Mar 14 14:19 mydir
+drwxrwx---.  2 calhouna upg58272 3072 Mar 14 12:12 otp/
+drwxrwx---.  2 calhouna upg58272 1024 Feb 19 18:19 Program 5/

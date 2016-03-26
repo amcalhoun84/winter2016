@@ -1,0 +1,9 @@
+ROOM NAME: OutsideHouse
+ROOM DESCRIPTION: You are outside a white house, in an open field. There is a mailbox here.
+CONNECTION 1: Lothlorien
+CONNECTION 2: Fizzbuzz
+CONNECTION 3: Sluice
+CONNECTION 4: ZotRoom
+CONNECTION 5: LoudRoom
+CONNECTION 6: Forest
+ROOM TYPE: MID_ROOM

@@ -1,0 +1,208 @@
+        -:    0:Source:unitTest2.c
+        -:    0:Graph:unitTest2.gcno
+        -:    0:Data:unitTest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// UNIT TEST - ASSIGNMENT 3
+        -:    3:// unitTest2.c
+        -:    4:// Unit Test for discardCard function.
+        -:    5:
+        -:    6:#include "dominion.h"
+        -:    7:#include "dominion_helpers.h"
+        -:    8:#include "rngs.h"
+        -:    9:#include <string.h>
+        -:   10:#include <stdio.h>
+        -:   11:#include <assert.h>
+        -:   12:#include <time.h>
+        -:   13:#include <stdlib.h>
+        -:   14:#include <math.h>
+        -:   15:#include <stdlib.h>
+        -:   16:
+        -:   17:#define DEBUG 0
+        -:   18:#define NOISY_TEST 0
+        -:   19:
+        -:   20:/* discardCard for Reference
+        -:   21:
+        -:   22:int discardCard(int handPos, int currentPlayer, struct gameState *state, int trashFlag)
+        -:   23:{
+        -:   24:
+        -:   25:  //if card is not trashed, added to Played pile
+        -:   26:  if (trashFlag < 1)
+        -:   27:    {
+        -:   28:      //add card to played pile
+        -:   29:      state->playedCards[state->playedCardCount] = state->hand[currentPlayer][handPos];
+        -:   30:      state->playedCardCount++;
+        -:   31:    }
+        -:   32:
+        -:   33:  //set played card to -1
+        -:   34:  state->hand[currentPlayer][handPos] = -1;
+        -:   35:
+        -:   36:  //remove card from player's hand
+        -:   37:  if ( handPos == (state->handCount[currentPlayer] - 1) ) 	//last card in hand array is played
+        -:   38:    {
+        -:   39:      //reduce number of cards in hand
+        -:   40:      state->handCount[currentPlayer]--;
+        -:   41:    }
+        -:   42:  else if ( state->handCount[currentPlayer] == 1 ) //only one card in hand
+        -:   43:    {
+        -:   44:      //reduce number of cards in hand
+        -:   45:      state->handCount[currentPlayer]--;
+        -:   46:    }
+        -:   47:  else
+        -:   48:    {
+        -:   49:      //replace discarded card with last card in hand
+        -:   50:      state->hand[currentPlayer][handPos] = state->hand[currentPlayer][ (state->handCount[currentPlayer] - 1)];
+        -:   51:      //set last card to -1
+        -:   52:      state->hand[currentPlayer][state->handCount[currentPlayer] - 1] = -1;
+        -:   53:      //reduce number of cards in hand
+        -:   54:      state->handCount[currentPlayer]--;
+        -:   55:    }
+        -:   56:
+        -:   57:  return 0;
+        -:   58:}
+        -:   59:
+        -:   60:*/
+        -:   61:
+function checkDiscardCard called 3 returned 100% blocks executed 57%
+        3:   62:int checkDiscardCard(int handPos, int currentPlayer, struct gameState *post, int trashFlag)
+        -:   63:{
+        -:   64:
+        3:   65:    struct gameState *pre = malloc(sizeof(struct gameState));
+        3:   66:    memcpy(pre, post, sizeof(struct gameState));
+        -:   67:    int r;
+        -:   68:
+        3:   69:    r = discardCard(handPos, currentPlayer, post, trashFlag);
+call    0 returned 100%
+        -:   70:
+        3:   71:    if(trashFlag != 1)
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+        -:   72:    {
+        2:   73:        assert(post->playedCards[pre->playedCardCount] == pre->hand[currentPlayer][handPos]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        2:   74:        assert(pre->playedCardCount + 1 == post->playedCardCount);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   75:    }
+        -:   76:
+        3:   77:    assert(post->hand[currentPlayer][handPos] = -1);
+        -:   78:
+        3:   79:    if(handPos == (pre->handCount[currentPlayer] - 1))
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:   80:    {
+    #####:   81:        assert(pre->handCount[currentPlayer] - 1 == post->handCount[currentPlayer] );
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+        -:   82:    }
+        3:   83:    else if (pre->handCount[currentPlayer] == 1)
+branch  0 taken 33% (fallthrough)
+branch  1 taken 67%
+        -:   84:    {
+        1:   85:        assert(pre->handCount[currentPlayer] - 1 == post->handCount[currentPlayer]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   86:    }
+        -:   87:    else
+        -:   88:    {
+        2:   89:        assert(pre->hand[currentPlayer][(pre->handCount[currentPlayer])] == post->hand[currentPlayer][ (post->handCount[currentPlayer] + 1 ) ] );
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        2:   90:        assert(post->hand[currentPlayer][post->handCount[currentPlayer]] == -1);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        2:   91:        assert(pre->handCount[currentPlayer] - 1 == post->handCount[currentPlayer] );
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   92:    }
+        -:   93:
+        3:   94:    assert(r==0);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        3:   95:    free(pre);
+        3:   96:    return 0;
+        -:   97:
+        -:   98:}
+        -:   99:
+function main called 1 returned 0% blocks executed 95%
+        1:  100:int main()
+        -:  101:{
+        1:  102:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        1:  103:    struct gameState *state = malloc(sizeof(struct gameState));
+        1:  104:    int player = 0, handPos, trash;
+        1:  105:    int k[10] = {adventurer, smithy, great_hall, council_room, baron, minion, mine, village, ambassador, salvager};
+        -:  106:
+        1:  107:    int seed = rand() % 65535;
+call    0 returned 100%
+        -:  108:
+        1:  109:    initializeGame(2, k, seed, state);
+call    0 returned 100%
+        -:  110:
+        1:  111:    printf("Testing the Discard Card Function\n");
+call    0 returned 100%
+        -:  112:
+        -:  113:    // for(i = 0; i < sizeof(state); i++)
+        -:  114:        // printf("Failure Point 1\n");
+        -:  115:       //  int handCountConst = floor(Random() * MAX_HAND);
+        -:  116:        // p=0;
+        1:  117:        handPos = rand() % 10;
+call    0 returned 100%
+        -:  118:
+        1:  119:        state->deckCount[0] = 50;
+        1:  120:        state->discardCount[0] = 10;
+        1:  121:        state->handCount[0] = 8;
+        1:  122:        state->discard[player][state->discardCount[player]] = 100;
+        1:  123:        state->playedCardCount = rand() % 10;
+call    0 returned 100%
+        -:  124:        // printf("Failure Point 2\n");
+        -:  125:
+        1:  126:        if(handPos > 0)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:  127:        {
+        1:  128:            state->playedCards[state->playedCardCount] = state->hand[0][handPos];
+        -:  129:        }
+        -:  130:        else
+        -:  131:        {
+    #####:  132:            state->playedCards[state->playedCardCount] = state->hand[0][handPos - 1];
+        -:  133:        }
+        -:  134:
+        1:  135:        trash = 0;
+        -:  136:
+        1:  137:        checkDiscardCard(handPos, player, state, trash); // trash = 0 check.
+call    0 returned 100%
+        1:  138:        printf("All assertions passed #1.\n");
+call    0 returned 100%
+        1:  139:        trash = 1;
+        1:  140:        handPos = rand() % 10;
+call    0 returned 100%
+        1:  141:        checkDiscardCard(handPos, player, state, trash); // trash = 1 check.
+call    0 returned 100%
+        1:  142:        printf("All assertions passed #2.\n");
+call    0 returned 100%
+        1:  143:        state->handCount[player] = 1;
+        1:  144:        trash = -1;
+        1:  145:        checkDiscardCard(handPos, player, state, trash); // trash = -1 check.
+call    0 returned 100%
+        1:  146:        printf("All assertions passed #3.\n");
+call    0 returned 100%
+        -:  147:
+        1:  148:        printf("TESTS OK!\n\n");
+call    0 returned 100%
+        1:  149:        free(state);
+        1:  150:        exit(0);
+call    0 returned 0%
+        -:  151:        return 0;
+        -:  152:}

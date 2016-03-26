@@ -1,0 +1,188 @@
+# FINAL PROJECT BASIC SCHEMA DRAFT I
+
+
+-- table Game
+-- Attributes: ID, int(11), (Primary Key, Auto_Increment)
+--			   Title, varchar (255) (Not Null?)
+--			   Publisher, varchar (255),
+--			   Release Date DATE
+-- 				NO FOREIGN KEYS ON THIS ONE - BREAKS THE THING
+#--			   Foreign Key: platform_id references id in platform
+#--			   Foreign Key: genre_id references id in genre
+#--			   Foreign Key: rating_id references id in rating
+#--			   Foreign Key: review_id references id in review
+--			   Do you feel a unique key would be useful here?
+
+
+CREATE TABLE `game`(
+`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`title` varchar(255), 
+`publisher` varchar(255),
+`release_date` date,
+`platform_id` int(11),
+`genre_id` int(11),
+`rating_id` int(11),
+`review_id` int(11),
+
+-- Move these to a few alter statements to get the table double linked up.
+# FOREIGN KEY(platform_id) REFERENCES platform(id),
+# FOREIGN KEY(genre_id) REFERENCES genre(id),
+# FOREIGN KEY(rating_id) REFERENCES rating(id),
+# FOREIGN KEY(review_id) REFERENCES review(id)
+) ENGINE = 'innoDB';
+
+-- table Genre
+-- Attributes: ID, name, characteristics
+-- id int (11) - PRIMARY, AUTO_INCREMENT
+-- name varchar(255)
+-- characteristics text
+-- Foreign Key: game_id referenced id in game
+
+CREATE TABLE `genre`(
+`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`name` varchar(255),
+`characteristics` text,
+`game_id` int(11),
+FOREIGN KEY(game_id) REFERENCES game(id)
+) ENGINE = 'innoDB';
+
+-- table platform
+-- Attributes: ID, Name, Manufacturer, Generation
+-- Foreign Key: game_id references id in game
+
+CREATE TABLE `platform`(
+`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`name` varchar(255),
+`manufacturer` varchar(255),
+`generation` varchar(255),
+`game_id` int(11),
+FOREIGN KEY(game_id) REFERENCES game(id)
+) ENGINE = 'innoDB';
+
+-- table REVIEW
+-- ATTRIBUTES: id, star_rating, text_review, game_id(FK)
+CREATE TABLE `review`(
+`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`star_rating` smallint(3),
+`text_review` text,
+`game_id` int(11),
+FOREIGN KEY(game_id) REFERENCES game(id)
+) ENGINE = 'innoDB';
+
+-- table RATING
+-- Attributes: ID, title, description, game_id
+CREATE table `rating`(
+`id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`title` varchar(255),
+`description` text,
+`game_id` int(11),
+FOREIGN KEY(game_id) REFERENCES game(id)
+) ENGINE = 'innoDB';
+
+-- ALTER TABLE TO MAKE FOREIGN KEYS MATCH UP
+ALTER TABLE game
+ADD FOREIGN KEY(platform_id) REFERENCES platform(id);
+
+ALTER TABLE game
+ADD FOREIGN KEY(genre_id) REFERENCES genre(id);
+
+ALTER TABLE game
+ADD FOREIGN KEY(rating_id) REFERENCES rating(id);
+
+ALTER TABLE game
+ADD FOREIGN KEY(review_id) REFERENCES review(id);
+
+-- INSERT COMMANDS(placeholders)
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Action', 'A generic catch-all for any game that requires a high degree of coordination and reflexes. Breaks down into several sub-genres, such as platformers, first-person shooters, stealth, etc.');
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Strategy', 'A generic catch-all for games that require both short and long term tactical and strategic thinking, management of resources, and planning. Sub-genres include civilization building, military simulation, real-time-strategy, and resource/corporate management titles.');
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Casual', 'A catch-all for any game that can be played by non-enthusiasts and for short bits of time while providing a satisfying experience. Can include light puzzle games, mobile phone games, and any type of quick game that can be played in 15-30 minute bursts.');
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Roleplaying Game', 'Games where the player assumes a high level of customization and control over the character in an often expansive and sprawling environment. This and action games are probably some of the most diverse over-arching genres. Can include fantasy, modern-era, sci-fi, steampunk, and other fantastic settings.');
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Sports', 'A simulation of games played for sport, where one or more teams play competiviely against the other.');
+
+INSERT INTO genre(name, characteristics)
+VALUE('Adventure', 'Adventure games were some of the earliest games created, beginning with the text adventure Colossal Cave Adventure in the 1970s. That game was originally titled simply "Adventure," and is the namesake of the genre. Over time, graphics have been introduced to the genre and the interface has evolved.');
+
+INSERT INTO genre(name, characteristics)
+VALUE('Other', 'Whatever we want it to be!');
+
+-- PLATFORMS
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Personal Computer', 'Various / Home-built', 'Variable On Internal Components');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation 4', 'Sony', '8th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('XBox One', 'Microsoft', '8th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Wii U', 'Nintendo', '8th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation 3', 'Sony', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Xbox 360', 'Microsoft', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Wii', 'Nintendo', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Xbox', 'Microsoft', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('GameCube', 'Nintendo', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation 2', 'Sony', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Dreamcast', 'Sega', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Nintendo 64', 'Nintendo', '5th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation', 'Sony', '5th');
+
+-- RATINGS
+
+INSERT INTO rating(title, description)
+VALUE ('E', 'Everyone, Content is generally suitable for all ages. May contain minimal cartoon, fantasy or mild violence and/or infrequent use of mild language. Equivalent to film rating G or milder PG.');
+
+INSERT INTO rating(title, description)
+VALUE ('E10+', 'Everyone 10+, Content is generally suitable for ages 10 and up. May contain more cartoon, fantasy or mild violence, mild language and/or minimal suggestive themes. Equivalent to film rating PG to mild PG-13.');
+
+INSERT INTO rating(title, description)
+VALUE ('T', 'Teen, Content is generally suitable for ages 13 and up. May contain violence, suggestive themes, crude humor, minimal blood, simulated gambling and/or infrequent use of strong language. Equivalent to Film Rating PG-13, can border into R territory.');
+
+INSERT INTO rating(title, description)
+VALUE ('M', 'Mature, Meant for adult audiences. Content is generally suitable for ages 17 and up. May contain intense violence, blood and gore, sexual content and/or strong language.. Equivalent to Film Rating R.');
+
+INSERT INTO rating(title, description)
+VALUE ('AO', 'Adults Only, Content suitable only for adults ages 18 and up. May include prolonged scenes of intense violence, graphic sexual content and/or gambling with real currency. Equivalent to Film Rating NC-17');
+
+INSERT INTO rating(title, description)
+VALUE ('EC', 'Early Childhood, this title is often awarded to educational and edutainment games designed for children under the age of 7. ');
+
+-- 
+
+INSERT INTO game(title, publisher, release_date)
+VALUES ('Skyrim', 'Bethesda Softworks', 2011-11-11);
+
+INSERT INTO game(title, publisher, release_date)
+VALUES ('World of Warcraft', 'Blizzard Entertainment', 2004-11-05);
+
+INSERT INTO game(title, publisher, release_date)
+VALUES ('Assassin\'s Creed', 'UbiSoft', 2007-11-14);

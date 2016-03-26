@@ -1,0 +1,188 @@
+        -:    0:Source:unitTest3.c
+        -:    0:Graph:unitTest3.gcno
+        -:    0:Data:unitTest3.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// UNIT TEST - ASSIGNMENT 3
+        -:    3:// unitTest3.c
+        -:    4:// Unit Test for buyCard function.
+        -:    5:
+        -:    6:#include "dominion.h"
+        -:    7:#include "dominion_helpers.h"
+        -:    8:#include "rngs.h"
+        -:    9:#include <string.h>
+        -:   10:#include <stdio.h>
+        -:   11:#include <assert.h>
+        -:   12:#include <time.h>
+        -:   13:#include <stdlib.h>
+        -:   14:#include <math.h>
+        -:   15:#include <stdlib.h>
+        -:   16:
+        -:   17:#define DEBUG 0
+        -:   18:#define NOISY_TEST 1
+        -:   19:
+        -:   20:// Ensures that buyCard function works properly and asserts properly.
+        -:   21:
+        -:   22:
+        -:   23:/* function for reference
+        -:   24:
+        -:   25:int buyCard(int supplyPos, struct gameState *state) {
+        -:   26:  int who;
+        -:   27:  if (DEBUG){
+        -:   28:    printf("Entering buyCard...\n");
+        -:   29:  }
+        -:   30:
+        -:   31:  // I don't know what to do about the phase thing.
+        -:   32:
+        -:   33:  who = state->whoseTurn;
+        -:   34:
+        -:   35:  if (state->numBuys < 1){
+        -:   36:    if (DEBUG)
+        -:   37:      printf("You do not have any buys left\n");
+        -:   38:    return -1;
+        -:   39:  } else if (supplyCount(supplyPos, state) <1){
+        -:   40:    if (DEBUG)
+        -:   41:      printf("There are not any of that type of card left\n");
+        -:   42:    return -1;
+        -:   43:  } else if (state->coins < getCost(supplyPos)){
+        -:   44:    if (DEBUG)
+        -:   45:      printf("You do not have enough money to buy that. You have %d coins.\n", state->coins);
+        -:   46:    return -1;
+        -:   47:  } else {
+        -:   48:    state->phase=1;
+        -:   49:    //state->supplyCount[supplyPos]--;
+        -:   50:    gainCard(supplyPos, state, 0, who); //card goes in discard, this might be wrong.. (2 means goes into hand, 0 goes into discard)
+        -:   51:
+        -:   52:    state->coins = (state->coins) - (getCost(supplyPos));
+        -:   53:    state->numBuys--;
+        -:   54:    if (DEBUG)
+        -:   55:      printf("You bought card number %d for %d coins. You now have %d buys and %d coins.\n", supplyPos, getCost(supplyPos), state->numBuys, state->coins);
+        -:   56:  }
+        -:   57:
+        -:   58:  //state->discard[who][state->discardCount[who]] = supplyPos;
+        -:   59:  //state->discardCount[who]++;
+        -:   60:
+        -:   61:  return 0;
+        -:   62:} */
+function checkBuyCard called 200 returned 100% blocks executed 79%
+      200:   63:int checkBuyCard(int supplyPos, struct gameState *state)
+        -:   64:{
+        -:   65:    int who;
+        -:   66:    // if needed
+        -:   67:    struct gameState pre;
+      200:   68:    memcpy(&pre, state, sizeof(struct gameState));
+        -:   69:    //
+      200:   70:    printf("Testing Buy Card Functionality\n\n");
+call    0 returned 100%
+        -:   71:
+      200:   72:    who = state->whoseTurn;
+        -:   73:
+      200:   74:    if(state->numBuys < 1)
+branch  0 taken 13% (fallthrough)
+branch  1 taken 87%
+        -:   75:    {
+       26:   76:        assert(state->numBuys > -1); // Make sure it doesn't go below 0.
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+       26:   77:        printf("You have no buys left. 0 Buy Test Passed.\n\n");
+call    0 returned 100%
+       26:   78:        return 0;
+        -:   79:    }
+        -:   80:    else
+        -:   81:    {
+      174:   82:        assert(state->phase=1); // Ensure that the game is in buy phase.
+      174:   83:        assert(state->numBuys >= 1);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+      174:   84:        printf("One or more buys available test passed.\n");
+call    0 returned 100%
+      174:   85:        if(supplyCount(supplyPos, state) < 1)
+call    0 returned 100%
+branch  1 taken 30% (fallthrough)
+branch  2 taken 70%
+        -:   86:        {
+       52:   87:            printf("Out of that particular card!\n");
+call    0 returned 100%
+       52:   88:            return 0;
+        -:   89:        }
+      122:   90:        printf("Card supply available.\n");
+call    0 returned 100%
+      122:   91:        if (state->coins >= getCost(supplyPos))
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0%
+        -:   92:        {
+      122:   93:            printf("Can buy card with available gold. Yes!\n");
+call    0 returned 100%
+        -:   94:        }
+        -:   95:        else
+        -:   96:        {
+    #####:   97:            printf("Thou hast not enough gold!\n");
+call    0 never executed
+        -:   98:        }
+      122:   99:        buyCard(supplyPos, state);
+call    0 returned 100%
+      122:  100:        assert(state->numBuys == pre.numBuys - 1);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+      122:  101:        assert(state->numBuys >= 0);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+      122:  102:        assert(state->coins == (pre.coins - getCost(supplyPos)));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:  103:
+      122:  104:        return 0;
+        -:  105:    }
+        -:  106:
+        -:  107:}
+        -:  108:
+function main called 1 returned 100% blocks executed 100%
+        1:  109:int main()
+        -:  110:{
+        1:  111:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        1:  112:    int seed = rand() % 65535;
+call    0 returned 100%
+        -:  113:    int coinage, buyage;
+        -:  114:    int supplyPos;
+        -:  115:    int i;
+        1:  116:    int k[10] = { adventurer, smithy, village, baron, salvager, sea_hag, great_hall, minion, council_room, gardens };
+        1:  117:    struct gameState *state = malloc(sizeof(struct gameState));
+        -:  118:
+        1:  119:    initializeGame(2, k, seed, state);
+call    0 returned 100%
+        -:  120:
+      201:  121:    for(i=0; i<200; i++)
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:  122:    {
+      200:  123:        supplyPos = rand() % 9; // tried with all cards, but can only allow kingdom cards.
+call    0 returned 100%
+      200:  124:        coinage = rand() % 16 + 8;
+call    0 returned 100%
+      200:  125:        buyage = rand() % 8;
+call    0 returned 100%
+      200:  126:        state->coins = coinage;
+      200:  127:        state->numBuys = buyage; // for random testing.
+        -:  128:
+      200:  129:        checkBuyCard(supplyPos, state);
+call    0 returned 100%
+        -:  130:    }
+        -:  131:
+        1:  132:    printf("\n\nAll tests passed!\n");
+call    0 returned 100%
+        -:  133:
+        -:  134:
+        1:  135:    free(state);
+        1:  136:    return 0;
+        -:  137:
+        -:  138:}

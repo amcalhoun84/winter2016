@@ -1,0 +1,91 @@
+#!/bin/bash
+# PROGRAM 1 - STATS
+# CS344-400
+# By Andrew M. Calhoun
+# Due 1/27/2016 - Woo! Future time!
+
+# Description:
+# Welcome to Shell Scriptin. We have been asked to use
+# the Bourne Shell Script to calculate averages and  medians for
+# a given set or input set of numbers whether from a file or stdin.
+# This is an introduction to the general world of LINUX scripting.
+# Each input file will have whole numbers (no floating point/decimals/fractions please!!!!)
+# and each number is separated by tabs. Each line must also have the same number of values.
+# The script will calculate the average and median across and down.
+
+# TEMPORARY FILE DUMP
+
+#TMP1 = $$_tmp1
+#TMP2 = $$_tmp2
+#TMP3 = $$_tmp3  ## This is the end point file.
+
+# trap "rm -f $TMP1 $TMP2 $TMP3; exit 1" INT HUP TERM
+
+#############
+# VARIABLES #
+#############
+
+# Useful numbers and variables
+
+in_file=""  # Our input file.
+out_file="" # Print results to file. 
+average=0  # Average - sum of numbers / total numbers
+median=0   # Whatever the middle number is if number of numbers is odd, or the middle two divided by two if even. 
+sum=0		# May be supplanted by $1
+count=0		# May be supplanted by $2
+			## If numbers % 2 != 0 - $median = ($x + $y) / 2
+			## else $median = $x
+
+
+#Let's see if there is a filename for the parameter.
+
+if [ $# -eq 2 ]
+	then
+		file=$2
+#If not, we can pass some numbers in with an input. 
+	elif [ $# -eq 1 ]
+		then
+			file=/dev/stdin
+
+#Else, we will explain how to properly use the program.
+	else
+		echo "Usage: stats {-rows|-cols} [file]" 1>&2
+		exit 1
+fi
+
+# Check to see if the file is readable.
+
+if [ ! -r "$file" ]
+then
+	echo " stats: cannot read file: $2" 1>&2 
+	exit 1
+fi
+
+# Make sure that the rows are properly passed for calculation.
+
+if [[ $1 =~ ^-r ]]
+	then
+		#Display the result of calculation:
+		echo "Average Median"
+		while read -a rows
+		do
+
+			sortedArray=($(printf '%s\n' "${rows[@]}"|sort -n))
+
+			#Calculate average:
+			for i in "${rows[@]}"
+			do
+				sum =`expr $sum+$1`
+				count=`expr $count + 1`
+			done
+			average=`expr $sum \ $count`
+
+			#Round Up
+			mod=`expr $sum % $count`
+			round=`expr $mod \* 2`
+			if [[ "$rounding" -ge "$total" ]]
+				then
+					average=`expr $average + 1`
+			fi
+
+

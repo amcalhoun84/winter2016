@@ -1,0 +1,220 @@
+        -:    0:Source:unitTest4.c
+        -:    0:Graph:unitTest4.gcno
+        -:    0:Data:unitTest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// Andrew M. Calhoun
+        -:    2:// UNIT TEST - ASSIGNMENT 3
+        -:    3:// unitTest4.c
+        -:    4:// Unit Test for checkEndTurn function.
+        -:    5:
+        -:    6:#include "dominion.h"
+        -:    7:#include "dominion_helpers.h"
+        -:    8:#include "rngs.h"
+        -:    9:#include <string.h>
+        -:   10:#include <stdio.h>
+        -:   11:#include <assert.h>
+        -:   12:#include <time.h>
+        -:   13:#include <stdlib.h>
+        -:   14:#include <math.h>
+        -:   15:#include <stdlib.h>
+        -:   16:
+        -:   17:#define DEBUG 0
+        -:   18:#define NOISY_TEST 1
+        -:   19:
+        -:   20:
+        -:   21:/*
+        -:   22:
+        -:   23:int endTurn(struct gameState *state) {
+        -:   24:  int k;
+        -:   25:  int i;
+        -:   26:  int currentPlayer = whoseTurn(state);
+        -:   27:
+        -:   28:  //Discard hand
+        -:   29:  for (i = 0; i < state->handCount[currentPlayer]; i++){
+        -:   30:    state->discard[currentPlayer][state->discardCount[currentPlayer]++] = state->hand[currentPlayer][i];//Discard
+        -:   31:    state->hand[currentPlayer][i] = -1;//Set card to -1
+        -:   32:  }
+        -:   33:  state->handCount[currentPlayer] = 0;//Reset hand count
+        -:   34:
+        -:   35:  //Code for determining the player
+        -:   36:  if (currentPlayer < (state->numPlayers - 1)){
+        -:   37:    state->whoseTurn = currentPlayer + 1;//Still safe to increment
+        -:   38:  }
+        -:   39:  else{
+        -:   40:    state->whoseTurn = 0;//Max player has been reached, loop back around to player 1
+        -:   41:  }
+        -:   42:
+        -:   43:  state->outpostPlayed = 0;
+        -:   44:  state->phase = 0;
+        -:   45:  state->numActions = 1;
+        -:   46:  state->coins = 0;
+        -:   47:  state->numBuys = 1;
+        -:   48:  state->playedCardCount = 0;
+        -:   49:  state->handCount[state->whoseTurn] = 0;
+        -:   50:
+        -:   51:  //int k; move to top
+        -:   52:  //Next player draws hand
+        -:   53:  for (k = 0; k < 5; k++){
+        -:   54:    drawCard(state->whoseTurn, state);//Draw a card
+        -:   55:  }
+        -:   56:
+        -:   57:  //Update money
+        -:   58:  updateCoins(state->whoseTurn, state , 0);
+        -:   59:
+        -:   60:  return 0;
+        -:   61:}
+        -:   62:
+        -:   63:*/
+        -:   64:
+function checkEndTurn called 1 returned 100% blocks executed 67%
+        1:   65:int checkEndTurn(struct gameState *post)
+        -:   66:{
+        -:   67:    int k, i, j;
+        1:   68:    int currentPlayer = whoseTurn(post);
+call    0 returned 100%
+        -:   69:    struct gameState pre;
+        1:   70:    memcpy(&pre, post, sizeof(struct gameState));
+        -:   71:
+        1:   72:    printf("Assertions to ensure cards are discarded properly at end of each turn.\n");
+call    0 returned 100%
+        -:   73:
+        2:   74:    for(i=0; i<pre.handCount[currentPlayer]; i++)
+branch  0 taken 50%
+branch  1 taken 50% (fallthrough)
+        -:   75:    {
+        1:   76:        pre.discard[currentPlayer][pre.discardCount[currentPlayer]++] = pre.hand[currentPlayer][i];
+        1:   77:        assert(pre.discard[currentPlayer][pre.discardCount[currentPlayer]++] == post->discard[currentPlayer][post->discardCount[currentPlayer]++]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:   78:        assert(post->discard[currentPlayer][post->discardCount[currentPlayer]++] != pre.hand[currentPlayer][i]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   79:
+        -:   80:       //  printf("%d\n%d\n", pre.hand[currentPlayer][i], post->hand[currentPlayer][i]);
+        -:   81:
+        1:   82:        pre.hand[currentPlayer][i] = -1;//Set card to -1
+        1:   83:        assert(pre.hand[currentPlayer][i] = post->hand[currentPlayer][i] - 2);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   84:
+        1:   85:        assert(post->hand[currentPlayer][i] + 1 >= pre.hand[currentPlayer][i]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   86:
+        1:   87:        printf("Post Turn End: %d\n Pre Turn End: %d\n", post->handCount[currentPlayer], pre.handCount[currentPlayer]);
+call    0 returned 100%
+        1:   88:        post->handCount[currentPlayer] = pre.handCount[currentPlayer] = 0;
+        -:   89:
+        1:   90:        assert(post->handCount[currentPlayer] == pre.handCount[currentPlayer]); // These should match.
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:   91:
+        -:   92:    }
+        -:   93:
+        1:   94:    printf("Discard Assertions passed.\n");
+call    0 returned 100%
+        -:   95:
+        1:   96:    printf("Player Counts -- makes sure player is properly selected.\n");
+call    0 returned 100%
+        -:   97:
+        1:   98:    if (currentPlayer < (post->numPlayers - 1))
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:   99:    {
+        1:  100:        post->whoseTurn = currentPlayer + 1;//Still safe to increment
+        1:  101:        assert(post->whoseTurn - (currentPlayer + 1) == pre.whoseTurn);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:  102:    }
+        -:  103:    else{
+    #####:  104:        pre.whoseTurn = post->whoseTurn = 0;//Max player has been reached, loop back around to player 1
+    #####:  105:        assert(pre.whoseTurn == post->whoseTurn);
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+        -:  106:    }
+        -:  107:
+        1:  108:    printf("Player Turn Counter Works Correctly\n");
+call    0 returned 100%
+        -:  109:
+        1:  110:    printf("Assertion Tests for Outposts, Action Counts, and Coins. All Should Be Equal.\n");
+call    0 returned 100%
+        -:  111:
+        1:  112:    assert(pre.outpostPlayed == post->outpostPlayed);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  113:    assert(pre.phase == post->phase);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  114:    assert(pre.numActions == post->numActions);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  115:    assert(pre.coins == post->coins);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  116:    assert(post->numBuys == pre.numBuys);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  117:    assert(post->playedCardCount == pre.playedCardCount);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        1:  118:    assert(pre.handCount[post->whoseTurn] == post->handCount[pre.whoseTurn]);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:  119:
+        1:  120:    printf("All assertions passed.\n");
+call    0 returned 100%
+        -:  121:
+        -:  122:     //int k; move to top
+        -:  123:  //Next player draws hand
+        6:  124:  for (k = 0; k < 5; k++){
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        5:  125:    j = drawCard(pre.whoseTurn, &pre);//Draw a card
+call    0 returned 100%
+        5:  126:    i = drawCard(post->whoseTurn, post);
+call    0 returned 100%
+        5:  127:    assert(j == i); // Broken -- is there a way to properly test this without destroying the program?
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        -:  128:  }
+        -:  129:
+        1:  130:    return 0;
+        -:  131:}
+        -:  132:
+        -:  133:
+function main called 1 returned 100% blocks executed 100%
+        1:  134:int main()
+        -:  135:{
+        1:  136:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        1:  137:    int seed = rand() % 65535;
+call    0 returned 100%
+        1:  138:    int k[10] = { adventurer, smithy, village, baron, great_hall, council_room, salvager, sea_hag, gardens, mine };
+        1:  139:    struct gameState *state = malloc(sizeof(struct gameState));
+        -:  140:
+        1:  141:    initializeGame(2, k, seed, state);
+call    0 returned 100%
+        -:  142:
+        1:  143:    checkEndTurn(state);
+call    0 returned 100%
+        -:  144:
+        1:  145:    return 0;
+        -:  146:
+        -:  147:}

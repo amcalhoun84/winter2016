@@ -1,0 +1,19 @@
+# !/bin/bash
+# Let's make an average
+
+while read myLine
+
+do 
+	sum=0
+	count=0
+	average=0
+
+
+	sum=`expr $sum + $x`
+	if [ "$?" -eq "0" ]; then
+		count=`expr $count + 1`
+	fi
+
+done
+echo "Average: " \"$sum\"/\"$count\" " | bc
+

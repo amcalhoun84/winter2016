@@ -1,0 +1,8 @@
+ROOM NAME: OutsideHouse
+ROOM DESCRIPTION: Smoldering heat and lava are all over the place. Plus a hobbit is fighting with Gollum for a shiny trinket.
+CONNECTION 1: ZotRoom
+CONNECTION 2: LoudRoom
+CONNECTION 3: Lothlorien
+CONNECTION 4: MtDoom
+CONNECTION 5: Sluice
+ROOM TYPE: END_ROOM

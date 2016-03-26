@@ -1,0 +1,77 @@
+Jonathan Lagrew
+CS 362 Winter 2016 Assignment 4
+randomhistory.txt
+
+Assignment 3 test results:
+Summary of coverage for all tests:
+File 'dominion.c'
+Lines executed:36.36% of 583
+Branches executed:38.37% of 417
+Taken at least once:33.81% of 417
+Calls executed:22.00% of 100
+
+Assignment 3 Adventurer test results:
+
+function playAdventurer called 250 returned 100% blocks executed 100%.
+
+Assignment 4 Adventurer test results:
+File 'dominion.c'
+Lines executed:26.59% of 583
+Branches executed:27.10% of 417
+Taken at least once:19.66% of 417
+Calls executed:14.00% of 100
+
+Assignment 4 Great Hall test results:
+
+File 'dominion.c'
+Lines executed:24.36% of 583
+Branches executed:24.22% of 417
+Taken at least once:16.79% of 417
+Calls executed:11.00% of 100
+
+For the first part of this assignment, I wrote random testers for two Dominion cards, Adventurer and Great Hall.
+The file names are randomtestcard.c and randomtestadventurer.c. These files with the command: 'make randomtestcard.out' 
+and 'make randomtestadventurer.out' these files will be created with added rules in the Makefile. Below is a discussion 
+I put together throughout this week to show the progress of the testing, improvements in coverage and how these tests help
+varify the correctness of the card's functionality. 
+
+randomtestcard.c
+This function implements a random tester for the great hall card. A summary of the card's effect, is that it adds 1 card, adds 1 action 
+and 1 victory point. My tester generates an instance of the game, called gamestate in the main function and then contains a for loop that
+runs through the test x amount of times, defined by the macro MAX_TESTS, which I set to 1000. Choosing this number was just a combination
+of how the different numbers changed the coverage and there wasn't any more time that say 500 versus 1000 tests took. 
+
+As mentioned, when great hall is played, the player draws an extra card, gains an action then discards a card. I had some practice with random testing
+from Assignment 3, so the implementation path I wanted to take was relatively the same but I wanted to focus on generating the best coverage and
+make sure I tested all the possiblilities that this relatively simple card could take. For the test, I made sure to create random values of number of players,
+deck count, discard count, hand count, choices and position, current player, and seed. I ensured that the test checked for an empty deck and that there
+were the correct restraints. In order to increase the check for an empty deck, I made it check 50% of the time for this, this actually helped improve the 
+coverage by a percent. I ensured to have asserts if cardEffect was 0. By checking the current player was the same as before and after and had the same number
+of cards in their hand, this ensured that the added card and discarded card feature worked. Same type of reasoning for the actions. After the card was played,
+the test checks for the hand count was equal to the before hand count and that the discard count was incremented or was 0 in the case of an empty deck or hand.
+This same check was done for the actions. 
+
+A bug I found was that the discard count didn't inc when the great hall card was played. For testing this, I used a printf to the screen to tell me how many times
+the discard count failed. This was determined when I playing with higher numbers of MAX_TESTS. 
+
+randomtestadventurer.c 
+This function implements a random tester for the adventurer card. A summary of the card's effect, is that it reveals cards from your deck until you reveal 2 Treasure
+cards. Put those treasure cards into your hand and discard the other revealed cards. We have done quite a bit of testing for this card and in Assignment 3 we wrote tests
+to check this card, so it'll provide a good comparision to the new random test. The random tester creates random values for number of players, deck count, discard count,
+hand count, choices, hand position, current player, and seed. Having too many players gives an error so I set the numbers of players to never be 0 or 1. 
+
+Again, checking for an empty deck helped coverage increase by a percent. And all lines in adventurer were covered. This was the same as Assignment 3. For asserts, I 
+asserted that the return value from cardEffect was not an error. Making sure the card worked, the test checks for at least 2 treasure cards in the player's hand.
+In an attempt to check for a new deck or hand, I put in some checks that checks for the case if all thier cards would be 0 or their hand would be 0. 
+
+A bug I found was that the hand count returns a negative number when the saved hand count is zero. cardtest2 and the random test  both detect the error with the post 
+total is not 2 treasure cards less than pre total. Pre was 1 more than Post values. This is because the bug I wrote into the refactored function does not discard
+the last card in the temp array. 
+
+
+
+
+
+	
+
+

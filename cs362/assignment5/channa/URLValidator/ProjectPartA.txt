@@ -1,0 +1,74 @@
+Team Members:
+Andrew Calhoun
+Jonathan Lagrew
+Nancy Chan
+
+CS 362
+Project Part A
+
+Explain testIsValid Function of UrlValidator test code.
+	testIsValid() has two parameters passed to it: 
+	1) testUrlParts
+	2) UrlValidator.ALLOW_ALL_SCHEMES.
+
+	testUrlParts is an array of ResultPair object arrays. ResultPair.item is a url part (scheme, authority, port, path, or query) and ResultPair.valid is true or false depending on whether or not the url part is valid. UrlValidator.ALLOW_ALL_SCHEMES. is the option specifying that all schemes are considered valid. This is contrasted with the option in testIsValidScheme() which only recognizes "http" and "gopher" as valid.
+
+	Under the public void testIsValid object, it is testing 2 URLs under assertion. These urls are http://www.google.com and http://www.google.com/. It goes on to use several different schemes and test validators to find different points of failure for URL validation.
+ 
+	These include tests to check for proper protocol usage, syntax, and address usage. 
+
+	As url parts are appended to testBuffer (which is ultimately converted to a string as “url”), we set the value of “expected”. If at any point, “part[index].valid” is false, then “expected” is set to false. The return value of a call to urlVal.isValid(url) is stored in “result”. If “result” is true, then “url” is printed. There is also an assertion statement to check that “expected” and “result” are equal.
+
+	At the very end of the file, there is test data for the individual URL parts and different protocols that may be used. These are no URLs in of themselves, but are critical parts. There are 4 testing bases, http, ftp, httpd, and telnet. https may also be advised to be added in future updates of this software.  
+
+Give how many total number of urls it is testing.
+	schemes: 9
+	authority: 19
+	port: 7
+	path: 10
+	query: 3
+
+9 * 19 * 7 * 10 * 3 =  35,910 possible URL combinations
+
+Also, explain how it is building all the urls.
+1. "testBuffer" is created.
+2. "testPartsIndex.length" = 5 because there are 5 url parts:
+(scheme, authority, port, path, and query).
+3. "testPartsIndexIndex" increments from 0 to 4 (scheme to query).
+4. In the do-while loop, "ResultPair[] part" contains the url part at "testPartsIndexIndex".
+5. "part[index].item", the url part, is appended to "testBuffer".
+6. "expected" is set to true or false depending on what was stored at "part[index].valid".
+7. "testBuffer" is converted to a string and stored in "url".
+8. "url" is passed to urlVal.isValid() and the return value is stored in "result".
+9. The above process repeats in a while loop as long as the following condition is true:
+ 	incrementTestPartsIndex(testPartsIndex, testObjects)
+10. According to the comment, incrementTestPartsIndex() will “add 1 to the lowest order part”.
+- In the for loop, “testPartsIndexIndex” is initialized to the last element in “testPartsIndex”.
+- The if and else statements determine if we simply increment or need to carry over. Example: If we have reached the 3rd query, then we cannot increment again since there are only 3 queries in total so we need to carry over to the port. query’s position in testPartsIndex is reset to 0 because we will have to try all queries again in combination with the port to which we are carrying over
+- “maxIndex &= (index == (part.length - 1))” is false when we have not reached the last element and “return (!maxIndex)” returns true so the while loop in testIsValid() continues.
+- “maxIndex &= (index == (part.length - 1))” is true when we have reached the last element and 
+“return (!maxIndex)” returns false so the while loop in testIsValid() terminates.
+11. To summarize step 10, the same combination of scheme, authority, port, and path is used until all combinations with query have been exhausted before moving onto the next path, then the next port, then the next authority, and finally, the next scheme (next as defined by the current index in testPartsIndex. Example: If testPartsIndex = {0, 0, 0, 1, 2}, then we are at the first scheme, first authority, first port, second path, and third query).
+
+This is done until the URL is either validated, or rendered invalid.
+
+Give an example of valid url being tested and an invalid url being tested by testIsValid() method.
+	1. valid url being tested: http://www.google.com:80/test1?action=view
+	scheme: ("http://", true)
+	authority: ("www.google.com", true)
+	port: (":80", true)
+	path: ("/test1", true)
+	query: ("?action=view", true)
+
+	2. invalid url being tested: http://www.google.com:80/..?action=view
+	scheme: ("http://", true)
+	authority: ("www.google.com", true)
+	port: (":80", true)
+	path: ("/..", false)
+
+UrlValidator code is a direct copy paste of apache commons url validator code. The test file/code is also direct copy paste of apache commons test code. Do you think that a real world test (URL Validator's testIsValid() test in this case) is very different than the unit tests and card tests that we wrote (in terms of concepts & complexity)? Explain in few lines.
+
+This is an open question. While the basic concepts (matching with certain values, making sure values / inputs are valid or match expectations) are fundamentally the same, as we are looking at five (or more) variables, we are adding an extra layer of complexity. With our previous unit and card tests, we go through aspects of the program and make sure that a computed result matches or very closely matches an expected result -- in that sometimes there may be ranges or several different cards that may be allowed/tolerated -- this looks at something as a whole and renders it valid or invalid, on the basis of the ResultPairs. 
+
+The concepts are fundamentally similar, and are incremental and logical buildings upon what we have already learned, but the complexity actually has increased as rather than one or two variables to consider, we now have five. 
+

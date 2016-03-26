@@ -1,0 +1,516 @@
+        -:    0:Source:smallsh.c
+        -:    0:Graph:smallsh.gcno
+        -:    0:Data:smallsh.gcda
+        -:    0:Runs:173
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2:** Name: Andrew Michael Calhoun
+        -:    3:** Assignment: Block 3, Small Shell - CS344-400
+        -:    4:** Date: 2/15/2016
+        -:    5:**
+        -:    6:** Description: Creating a small, shell-like environment in C to do a variety
+        -:    7:** of tasks, such as forking, multitasking/multiprocess management, and more.
+        -:    8:** There are three basic commands to use, exit, cd, and status.
+        -:    9:*/
+        -:   10:#include <unistd.h>  // unix shell commands, exec(), execvp(), fork(), et al.
+        -:   11:#include <stdlib.h>	// getenv()
+        -:   12:#include <stdio.h>
+        -:   13:#include <assert.h>
+        -:   14:#include <string.h>	// strcmp(), strtok() -- all string related functions
+        -:   15:#include <signal.h>
+        -:   16:#include <fcntl.h>  // file control (from Lecture #12)
+        -:   17:#include <signal.h> // from CS372, lecture #10
+        -:   18:#include <sys/types.h>  // getpid()
+        -:   19:#include <sys/wait.h>	// waitpid()
+        -:   20:#include <sys/stat.h>
+        -:   21:
+        -:   22:#define DLM " \t\r\n\a"
+        -:   23:#define CHRLM 2048
+        -:   24:#define ARGLM 512
+        -:   25:#define BUFFSIZE 64
+        -:   26:#define DBG 0
+        -:   27:#define NL NULL
+        -:   28:
+        -:   29:
+        -:   30:// Create a linked to match up the children and have some flexibility to shut down background processes.
+        -:   31:// based off patterns learned in CS 261
+        -:   32:typedef struct bgChld {
+        -:   33:	int bgPID; // child process ID
+        -:   34:	struct bgChld *nxt;
+        -:   35:
+        -:   36:}bgChld;
+        -:   37:
+        -:   38:/* PROTOTYPES */
+        -:   39:char *rdLn(); // reads user input
+        -:   40:char **parse(char *input, int *numArgs);
+        -:   41:int rdctSh(int inFlg, int oFlg);
+        -:   42:int lnchSh(char **args, int numArgs, int bgP, int *sglFlg, int *trmSgl, bgChld *head);
+        -:   43:int execSh(char **args, int numArgs, int *extFlg, int *sglFlg, int *trmSgl, bgChld *head);
+        -:   44:int shExt(char **args);
+        -:   45:void shSt();
+        -:   46:void shBGLstInsrt(bgChld *ptr, int bgPID);
+        -:   47:
+        -:   48:/*
+        -:   49:** Function: status()
+        -:   50:** Description: Checks the status of the process IDs and background process IDs.
+        -:   51:** Parameters: None
+        -:   52:** Pre/Post: Process IDs exist and we need to be notified about them.
+        -:   53:*/
+        -:   54:
+function shSt called 89 returned 100% blocks executed 100%
+       91:   55:void shSt() {
+        -:   56:	int pid, bgS; // process id and background stats
+        -:   57:
+        -:   58:	// check for background processes. Research based on http://stackoverflow.com/questions/13482416/linux-waitpid-wnohang-and-zombies.
+        -:   59:	// For the record? I hate zombies. My programs will NOT be the cause of the zombie apocalypse.
+        -:   60:	do {
+       91:   61:		pid = waitpid(-1, &bgS, WNOHANG);
+call    0 returned 100%
+       91:   62:		if(pid > 0) {// uh-oh... something died... but will it stay DEAD?!
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        2:   63:    		printf("Background PID %d has terminated: ", pid);
+call    0 returned 100%
+        2:   64:			if(WIFEXITED(bgS)) printf("Exited value: %d\n", WEXITSTATUS(bgS));  // Exited normally
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+call    2 returned 100%
+        1:   65:			else if (WIFSIGNALED(bgS) != 0) printf("Terminated by signal %d\n", WTERMSIG(bgS)); // it was forcefully or otherwise terminated.
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+call    2 returned 100%
+        -:   66:		}
+       91:   67:    }while(pid > 0);
+branch  0 taken 2%
+branch  1 taken 98% (fallthrough)
+       89:   68:}
+        -:   69:
+        -:   70:/*
+        -:   71:** Function: char readLine()
+        -:   72:** Description: Function will get the user input and allocate it to the buffer via getline.
+        -:   73:** Credit: http://stephen-brennan.com/2015/01/16/write-a-shell-in-c/
+        -:   74:** Params: None
+        -:   75:*/
+        -:   76:
+function rdLn called 89 returned 100% blocks executed 100%
+       89:   77:char *rdLn() {
+       89:   78:	char *bff = NL;
+       89:   79:	size_t bffSz = 0;
+       89:   80:	getline(&bff, &bffSz, stdin);
+call    0 returned 100%
+       89:   81:	return bff;
+        -:   82:}
+        -:   83:
+        -:   84:/* Function: char **prsLn
+        -:   85:** Description: Based on stephen brennan's version of the function, it will take, store, and interpret
+        -:   86:				the command line arguments and set the variable for the number of arguemnts.
+        -:   87:				Credit: http://stephen-brennan.com/2015/01/16/write-a-shell-in-c/
+        -:   88:	Paramaters: char *userInput, int *numArgs -- data is held in the memory, given we have
+        -:   89:					multiple processes potentially running.
+        -:   90:*/
+        -:   91:
+function prsLn called 89 returned 100% blocks executed 88%
+       89:   92:char **prsLn(char *input, int *numArgs) {
+       89:   93:	int bffSz = BUFFSIZE;
+       89:   94:	int pos = 0;
+       89:   95:	char *tkn, **tkns = malloc(bffSz * sizeof(char*));	// token and tokens,
+        -:   96:								// tkn is for individual characters, tokens is for the
+        -:   97:								// string.
+        -:   98:
+       89:   99:	tkn = strtok(input, DLM);	// tokenize the string. Compares whatever is in the input
+call    0 returned 100%
+        -:  100:											// and the delimiters, and tokenizes it versus the delimiters.
+        -:  101:											// remove \t or \n or \r or \a
+        -:  102:
+      443:  103:	while(tkn!=NL) { // NULL works -- tried '\0' and ran into a few weird problems.
+branch  0 taken 75%
+branch  1 taken 25% (fallthrough)
+      265:  104:		tkns[pos] = tkn;	// sets the tkns[pos] to whatever the character is. Helps recreate the string.
+      265:  105:		pos++;
+      265:  106:		if(pos>=bffSz) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  107:			bffSz*=2;
+    #####:  108:			tkns = realloc(tkns, bffSz * sizeof(char*));
+        -:  109:        }
+      265:  110:		tkn = strtok(NL, DLM);
+call    0 returned 100%
+        -:  111:	}
+       89:  112:	tkns[pos] = NL;
+       89:  113:	*numArgs = pos;
+       89:  114:	return tkns;
+        -:  115:}
+        -:  116:
+        -:  117:// LAUNCH SHELL
+        -:  118:/* FUNCTION: lnchSh
+        -:  119:** Description: Launches the not-otherwise-specified/hard coded processes and branches and forks as necessary.
+        -:  120:** Allows us to do file inputs and outputs, multiple processes at once, and put processes in the background.
+        -:  121:** Parameters: char **args, int numArgs, int *extFlg, int *sglFlg, int *trmSgl, struc bgChld *head
+        -:  122:** Pre: The shell is given a command to run, such as cd, status, or exit. Interpreted by the execute shell function.
+        -:  123:** Post: Command is run, and either a termination signal is called, or the user is prompted to enter another command.
+        -:  124:*/
+function lnchSh called 84 returned 100% blocks executed 76%
+       84:  125:int lnchSh(char **args, int numArgs, int bgP, int *sglFlg, int *trmSgl, bgChld *head) {
+        -:  126:	pid_t pid, wpid;
+        -:  127:	int st;
+       84:  128:	pid = fork();
+call    0 returned 99%
+        -:  129:	// Generate the Children
+      168:  130:	if(pid == 0) {
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        -:  131:		// researched sigaction -- http://man7.org/linux/man-pages/man2/sigaction.2.html
+        -:  132:		struct sigaction a;
+       84:  133:		a.sa_handler = SIG_DFL;
+       84:  134:		a.sa_flags = 0;
+       84:  135:		sigaction(SIGINT, &a, 0);
+call    0 returned 100%
+       84:  136:		int fd, inFlg = -1, oFlg = -1;
+        -:  137:		// Counter for preventing a fault in case of background commands or other processes running.
+       84:  138:		int cnt = numArgs;
+       84:  139:		if(bgP==1) cnt=(numArgs-1);
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        -:  140:
+        -:  141:		int i;
+      341:  142:		for(i=0;i<cnt;i++) {
+branch  0 taken 75%
+branch  1 taken 25% (fallthrough)
+      257:  143:			if(strcmp(args[i], "<") == 0) inFlg = i;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+      255:  144:			else if(strcmp(args[i], ">") == 0) oFlg = i;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+        -:  145:		}
+       86:  146:		if((inFlg > -1) || (oFlg > -1))	{
+branch  0 taken 98% (fallthrough)
+branch  1 taken 2%
+branch  2 taken 1% (fallthrough)
+branch  3 taken 99%
+        3:  147:			if(rdctSh(inFlg, oFlg) == 0) {	// based off of Pipes and Redirection - Lecture 12
+call    0 returned 100%
+branch  1 taken 67% (fallthrough)
+branch  2 taken 33%
+        2:  148:				fd=open(args[inFlg + 1], O_RDONLY, 0644); // open file
+call    0 returned 100%
+        2:  149:				if(fd==-1) {
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        1:  150:					printf("Cannot open %s\n", args[inFlg+1]);
+call    0 returned 100%
+        1:  151:					exit(1); // exit the child process
+call    0 returned 0%
+        -:  152:				}
+        -:  153:				else {
+        1:  154:					if(dup2(fd,0)==-1) {
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:  155:						printf("Could not redirect pipe to designated input file.\n");
+call    0 never executed
+    #####:  156:						exit(1); // exit the child process
+call    0 never executed
+        -:  157:					}
+        1:  158:					args[inFlg] = NL;
+        1:  159:					close(fd);
+call    0 returned 100%
+        -:  160:				}
+        -:  161:			}
+        -:  162:			else { // perform redirect for output
+        1:  163:				fd = open(args[oFlg+1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+call    0 returned 100%
+        1:  164:				if(fd == -1) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  165:					printf("smallsh: cannot open %s for output.\n", args[oFlg+1]);
+call    0 never executed
+    #####:  166:					exit(1); // exit the child process
+call    0 never executed
+        -:  167:				}
+        -:  168:				else {
+        1:  169:					if(dup2(fd, 1) == -1) {
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:  170:						printf("Cannot redirect stdout for output\n");
+call    0 never executed
+    #####:  171:						exit(1); // exit the child process
+call    0 never executed
+        -:  172:					}
+        1:  173:					args[oFlg] = NL;
+        1:  174:					close(fd);
+call    0 returned 100%
+        -:  175:				}
+        -:  176:			}
+        -:  177:	}
+       81:  178:	else if((bgP==1)&&(inFlg<0)){
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0%
+        2:  179:		fd = open("/dev/null", O_RDONLY, 0644);
+call    0 returned 100%
+        2:  180:		if(fd == -1) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  181:			printf("smallsh: cannot open \"/dev/null\"\n");
+call    0 never executed
+    #####:  182:			exit(1); // exit child process
+call    0 never executed
+        -:  183:		}
+        -:  184:		else {
+        2:  185:			if(dup2(fd, 0) == -1) {
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:  186:				printf("Could not redirect the input for \"/dev/null\".\n");
+call    0 never executed
+    #####:  187:				exit(1); // exit child process
+call    0 never executed
+        -:  188:			}
+        2:  189:			close(fd);
+call    0 returned 99%
+        -:  190:			}
+        -:  191:		}
+        3:  192:		if(execvp(args[0], args) == -1 ) {
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        3:  193:				printf("smallsh: no such file or directory\n");
+call    0 returned 100%
+        3:  194:				exit(1);
+call    0 returned 0%
+        -:  195:		}
+        -:  196:	}
+        -:  197:	// Error forking
+       84:  198:	else if (pid < 0) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  199:		perror("error forking");
+call    0 never executed
+    #####:  200:		return 1;
+        -:  201:	}
+        -:  202:	// Parent Processes
+        -:  203:	else {
+        -:  204:		do {
+       84:  205:			if(bgP == 1) {
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        2:  206:				shBGLstInsrt(head, pid);
+call    0 returned 100%
+        2:  207:				printf("BG process %d initiated.\n", pid);
+call    0 returned 100%
+        2:  208:				fflush(stdout); // flush the buffer
+call    0 returned 100%
+        -:  209:            }
+       82:  210:			else wpid = waitpid(pid, &st, WUNTRACED);
+call    0 returned 100%
+       84:  211:		}while(!WIFEXITED(st) && !WIFSIGNALED(st));
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+branch  2 never executed
+branch  3 never executed
+       84:  212:		if(WIFEXITED(st)) {
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+       84:  213:			*sglFlg = 0;
+       84:  214:			return WEXITSTATUS(st);
+        -:  215:		}
+    #####:  216:		else if(WIFSIGNALED(st)) {
+branch  0 never executed
+branch  1 never executed
+    #####:  217:			*sglFlg = 1;
+    #####:  218:			*trmSgl = WTERMSIG(st);
+    #####:  219:			return 1;
+        -:  220:		}
+        -:  221:	}
+        -:  222:
+    #####:  223:	return 1;
+        -:  224:}
+        -:  225:
+        -:  226:/* FUNCTION: EXECUTE SHELL
+        -:  227:** Description: The processing function, before launching the shell command.
+        -:  228:** Parameters: char **args, int numArgs, int *extFlg, int *sglFlg, int *trmSgl, struc bgChld *head
+        -:  229:** Pre: The shell is given a command to run, such as cd, status, or exit.
+        -:  230:** Post: Passes it to the shell launcher, where it is processed and the command is executed. */
+function execSh called 89 returned 100% blocks executed 84%
+       89:  231:int execSh(char **args, int numArgs, int *extFlg, int *sglFlg, int *trmSgl, bgChld *head) {
+       89:  232:	int bgP=0;
+        -:  233:	// Make sure there is nothing else running.
+       89:  234:	if((args[0]==NL)||strcmp(args[0],"#")==0)return 1; // if command is empty
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+branch  2 taken 0% (fallthrough)
+branch  3 taken 100%
+       89:  235:	else if(strcmp(args[0], "cd") == 0) {
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        2:  236:		if(args[1]==NL)	{
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        -:  237:			char* hmPth;
+        1:  238:			hmPth = getenv("HOME");
+call    0 returned 100%
+        1:  239:			if(hmPth!=NL) chdir(hmPth);
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+call    2 returned 100%
+        -:  240:		}
+        -:  241:		else {
+        1:  242:			if(chdir(args[1]) != 0)	{
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+    #####:  243:				printf("smallsh: could not find the directory.\n");
+call    0 never executed
+    #####:  244:				*extFlg = 1;
+        -:  245:			}
+        -:  246:		}
+        2:  247:    return 1; // continue loop.
+        -:  248:	}
+       87:  249:	else if(strcmp(args[0], "status") == 0)	{ // Check Status
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+        1:  250:		if(*sglFlg == 0) printf("smallsh: exit value: %d\n", *extFlg); // Set the sign
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+call    2 returned 100%
+    #####:  251:		else printf("smallsh: terminated by signal: %d\n", *trmSgl);
+call    0 never executed
+        1:  252:		return 1; // otherwise program will fall through
+        -:  253:	}
+       86:  254:	else if(strcmp(args[0], "exit") == 0) {
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        2:  255:		return 0;	// end the loop. 0 = end, 1 = continue, as shStatus is a boolean int
+        -:  256:	}
+       84:  257:	if(strcmp(args[numArgs - 1], "&") == 0)	{
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+        2:  258:		bgP = 1;
+        2:  259:		args[numArgs - 1] = NL;
+        -:  260:	}
+       84:  261:	*extFlg = lnchSh(args, numArgs, bgP, sglFlg, trmSgl, head);
+call    0 returned 100%
+       84:  262:	return 1;
+        -:  263:}
+        -:  264:
+        -:  265:/* FUNCTION: rdctSh
+        -:  266:** Redirect Shell
+        -:  267:** Description: Redirects pipes to the needed process, so that we can have multiple processing running and waiting.
+        -:  268:** Parameters: int inFlg, int oFlg
+        -:  269:** Pre: There is an input/output command or another process is running/waiting and needs to be reached.
+        -:  270:** Post: The process is redirected or called up.
+        -:  271:*/
+        -:  272:
+function rdctSh called 3 returned 100% blocks executed 70%
+        3:  273:int rdctSh(int inFlg, int oFlg) {
+        3:  274:	if((inFlg > -1) && (oFlg > -1)) {
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+branch  2 taken 0% (fallthrough)
+branch  3 taken 100%
+    #####:  275:		if(inFlg < oFlg) return 0;
+branch  0 never executed
+branch  1 never executed
+    #####:  276:		else return 1;
+        -:  277:	}
+        3:  278:	else if((inFlg>-1)&&(oFlg==-1)) return 0;
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0%
+        1:  279:	else return 1;
+        -:  280:}
+        -:  281:
+        -:  282:/* Allows user to add or remove process IDs. Working on potentially
+        -:  283:** advanced version that will allow them to kill / terminate speciic ones.
+        -:  284:*/
+        -:  285:
+        -:  286:// Linked List for processes to make them easier to find and eliminate when they are no longer needed.
+        -:  287:// Inputs are the struct bgChld ptr, and the bgPID. When we need to either insert or remove it, we call this
+        -:  288:// function to
+        -:  289:
+function shBGLstInsrt called 2 returned 100% blocks executed 83%
+        2:  290:void shBGLstInsrt(bgChld *ptr, int bgPID) {
+        2:  291:	assert(ptr != NL);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        2:  292:    while(ptr->nxt != NL) ptr = ptr->nxt;
+branch  0 taken 33%
+branch  1 taken 67% (fallthrough)
+        2:  293:	ptr->nxt = (bgChld *)malloc(sizeof(bgChld));
+        2:  294:	ptr = ptr->nxt;
+        2:  295:	ptr->bgPID = bgPID;
+        2:  296:	ptr->nxt = NL;
+        2:  297:}
+        -:  298:
+        -:  299:/*
+        -:  300:** Function: int main()
+        -:  301:** Description: The primary executive function of the program, contains the loops and calls
+        -:  302:** to run the various loops.
+        -:  303:** Pre/Post: Execute program and exit.
+        -:  304:*/
+        -:  305:
+function main called 2 returned 100% blocks executed 100%
+        2:  306:int main() {
+        -:  307:	bgChld *head, *cur;
+        2:  308:	head = (bgChld *)malloc(sizeof(bgChld));
+        2:  309:	cur = head;
+        2:  310:	cur->bgPID = -1; // automatically default to non-extant.
+        2:  311:	cur->nxt = NL;
+        -:  312:
+        -:  313:	char *input, **args;
+        2:  314:	int numArgs, shS, extFlg = 0,
+        2:  315:		sglFlg = 0, trmSgl;
+        -:  316:
+        -:  317:	// Signal Handler for SIGINT.
+        -:  318:	struct sigaction a;
+        2:  319:	a.sa_flags = 0;
+        2:  320:	a.sa_handler = SIG_IGN; // signal ignore
+        2:  321:	sigaction(SIGINT, &a, NL);
+call    0 returned 100%
+        -:  322:
+        -:  323:	do { // tried with a while loop originally, didn't work out too well. Just went
+        -:  324:		// straight back to the command prompt.
+        -:  325:	    // check for background processes
+       89:  326:		shSt();
+call    0 returned 100%
+       89:  327:		printf(": ");
+call    0 returned 100%
+       89:  328:		fflush(stdout); // flush the buffer and prompt, per directions
+call    0 returned 100%
+        -:  329:
+       89:  330:		input = rdLn(); // read input
+call    0 returned 100%
+       89:  331:		args = prsLn(input, &numArgs);
+call    0 returned 100%
+       89:  332:        shS = execSh(args, numArgs, &extFlg, &sglFlg, &trmSgl, head);
+call    0 returned 100%
+       89:  333:		free(input);
+       89:  334:		free(args);
+       89:  335:	 } while(shS);
+branch  0 taken 98%
+branch  1 taken 2% (fallthrough)
+        -:  336:    // kill any background processes to prevent overwrite or orphans.
+        2:  337:	cur = head;
+        8:  338:	while (cur != NL) {
+branch  0 taken 67%
+branch  1 taken 33% (fallthrough)
+        4:  339:		if(cur->bgPID != -1) {
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        2:  340:			kill(cur->bgPID, SIGKILL); // Kill that ZOMBIE
+call    0 returned 100%
+        -:  341:		}
+        4:  342:		cur = cur->nxt;
+        -:  343:	}
+        8:  344:	while((cur = head) != NL) {
+branch  0 taken 67%
+branch  1 taken 33% (fallthrough)
+        4:  345:		head = head->nxt;
+        4:  346:		free(cur);
+        -:  347:	}
+        2:  348:	return 0;
+        -:  349:}
