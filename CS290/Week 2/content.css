@@ -1,0 +1,91 @@
+
+/*   Name: Andrew M. Calhoun (calhouna) 
+     Email: calhouna@oregonstate.edu
+     Date: 10/5/2015
+     Web Development
+*/
+
+
+body
+{
+}
+
+h1
+{
+	text-align: center;
+}
+
+table
+{
+	width: 50%;
+
+}
+
+th
+{
+	background-color: white;
+	font-weight: bold;
+}
+
+
+tfoot
+{
+	background-color: white;
+}
+
+tr:nth-of-type(2n) {
+	background-color: #9090FF;
+}
+tr:nth-of-type(3) {
+	background-color: #ffc;
+}
+tr:nth-of-type(5) {
+	background-color: #ffc;
+}
+
+td, tr
+{
+	padding: 10px;
+}
+
+table, th, td, tr
+{
+	border: 1px solid black;
+}
+
+.ital
+{
+	font-style: italic;
+}
+
+.outer-content
+{
+	margin-top: 20px;
+	padding: 15px 0;
+	width: 75%;
+	background-color: pink;
+}
+
+.inner-content
+{
+	width: 75%;
+	background-color: blue;
+	color: white;
+	padding: 3px;
+	margin: 0 auto;
+	text-align: center;
+
+}
+
+form
+{
+	margin: 15px 0;
+	border: 2px solid purple;
+	padding: 15px;
+}
+
+input
+{
+	border: 1px solid green;
+	padding: 5px;
+}

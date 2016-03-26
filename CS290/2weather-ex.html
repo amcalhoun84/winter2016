@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      var apiKey = '74b347fab4f8237aed99a4f9d92e5c09';
+
+      document.addEventListener('DOMContentLoaded', bindButtons);
+
+      function bindButtons(){
+        document.getElementById('zipSubmit').addEventListener('click', function(event){
+          var req = new XMLHttpRequest();
+          var payload = {zip:null};
+          
+          payload.city = document.getElementById('city').value
+          //payload.zipCode = document.getElementById('zipCode').value + ',us&';
+          req.open('GET', 'api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' apiKey, false);
+          // req.setRequestHeader('Content-Type', 'application/json');
+          // req.send(JSON.stringify(payload));
+          var response = JSON.parse(req.responseText);
+          document.getElementById('temperature').textContent = response.temperature.value;
+          document.getElementById('wValue').textContent = response.weather.value;
+          document.getElementById('windSpeed').textContent = response.wind.speed.value;
+          document.getElementById('windDirection').textContent = response.wind.direction.code;
+          event.preventDefault();
+        })
+      }
+    </script>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Weather</legend>
+        <!-- <label for="zip">ZIP CODE</label>
+        <input type="text" name="zip" id="zip">
+        <input type="submit" id="zipSubmit">
+        <br /><br /> -->
+
+        <label for="city">CITY</label>
+        <input type="text" name="city" id="city">
+        <input type="submit" id="citySubmit">
+      </fieldset>
+    </form>
+    <div>
+      <h2>Result</h2>
+      <ul>
+        <li><span>Temperature:</span><span id="temperature"></span></li>
+        <li><span>Weather:</span><span id="wValue"></span></li>
+        <li><span>Wind Speed:</span><span id="windSpeed"></span></li>
+        <li><span>Wind Direction:</span><span id="windDirection"></span></li>
+      </ul>
+    </div>
+  </body>
+</html>
