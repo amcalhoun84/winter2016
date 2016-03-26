@@ -1,0 +1,93 @@
+<!DOCTYPE html>	
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				CS 340 Website
+			</title>
+			<link rel="stylesheet" type="text/css" href="StyleSheet.css">
+		</head>
+		<body>
+			<script src="connect_db.php"></script>
+			<form id="inputForm" action="connect_db.php" method="get">
+				<fieldset>
+					<legend>Search Data</legend>
+					<label>Game Title</label>
+					<input type="text" name="game" id="game">
+					</br></br>
+					<label>Game Review</label>
+					<select name="lowRev" id="lowRev">
+						<option value="NULL"></option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+					</select> - 
+					<select name="highRev" id="highRev">
+						<option value="NULL"></option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+					</select>
+					</br></br>
+					<label>Game Genre</label>
+					<select name="genre" id="genre">
+						<option value="NULL"></option>
+						<option value="Action">Action</option>
+						<option value="Action">Adventure</option>
+						<option value="Driving">Driving</option>
+						<option value="Fighting">Fighting</option>
+						<option value="First Person Shooter">First Person Shooter</option>
+						<option value="Roleplaying Game">Role-playing Game</option>
+						<option value="Simulation">Simulation</option>
+						<option value="Sports">Sports</option>
+						<option value="Strategy">Strategy</option>
+						<option value="War">War</option>
+					</select>
+					</br></br>
+					<label>Game Rating</label>
+					<select name="rating" id="rating">
+						<option value="NULL"></option>
+						<option value="E">E</option>
+						<option value="E10+">E10+</option>
+						<option value="T">T</option>
+						<option value="M">M</option>
+						<option value="AO">AO</option>
+					</select>
+					</br></br>
+					<label>Platform</label>
+					<select name="platform" id="platform">
+						<option value="NULL"></option>
+						<option value="Xbox One">Xbox One</option>
+						<option value="PS4">Playstation 4</option>
+						<option value="Wii U">Wii U</option>
+						<option value="Xbox 360">Xbox 360</option>
+						<option value="PS3">Playstation 3</option>
+						<option value="Wii">Nintendo Wii</option>
+						<option value="Xbox">Xbox</option>
+						<option value="PS2">Playstation 2</option>
+						<option value="GameCube">GameCube</option>
+						<option value="N64">Nintendo 64</option>
+						<option value="PS">Playstation</option>
+						<option value="PC">PC</option>
+					</select>					
+					</br></br>
+					<input type="submit" name="dataSub" id="dataSub">
+				</fieldset>
+			</form>
+			<script src="functions.js"></script>
+		</body>
+	</html>

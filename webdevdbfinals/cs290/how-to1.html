@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title> How To Use the GoogleMaps API</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+
+
+<body>
+	<h1>Creating Your First Map</h1>
+
+  <p>Once you are set up and have your API key, you can start creating and setting up maps. A fairly standard map is given in the code sample given below. This code sample is the same that can be found on Google's documentation, but I have taken the liberty of starring things that you will not need to create a map, and highlighting the code that is essential for the basics of a map.</p>
+
+  <p>I have taken the liberty of including the basic skeleton of an HTML page as well, so that you can get an idea of what an .hmtl file looks like OR refresh yourself if you are unsure of anything.</p>
+
+<div class="code-example">
+<pre>
+&lt;!DOCTYPE html&gt;<span style="color:red">*</span> // You do not need the lines that I have noted<br /> with a red <span style="color:red">*</span> if you already have an HTML page set up.
+&lt;html&gt;<span style="color:red">*</span>
+  &lt;head&gt;<span style="color:red">*</span>
+    &lt;style type="text/css"&gt; // Put this in your CSS file or in the head<br/> of your html/php/js file.
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    &lt;/style&gt;<span style="color:red">*</span>
+  &lt;/head&gt;<span style="color:red">*</span>
+  &lt;body&gt;<span style="color:red">*</span>
+    &lt;div id="map"&gt;&lt;/div&gt;
+    &lt;script type="text/javascript"&gt;
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    <span class="point-out">center: {lat: 44.567, lng: -123.283}</span>, // This...
+    <span class="point-out">zoom: 8</span> //...and this are required a
+                                            // map at all!
+  });
+}
+
+    &lt;/script&gt;
+    &lt;script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=<br/ ><span style="font-weight:bolder; text-decoration: underline; color: blue;">YOUR_API_KEY&amp;callback=initMap</span>"&gt;
+    &lt;/script&gt;
+  &lt;/body&gt;<span style="color:red">*</span>
+&lt;/html&gt;<span style="color:red">*</span>
+
+</pre>
+</div>
+
+<p>While I have noted things you don't need with red stars and pointed out essential properties in bold red letters, I also want to point out the <span class="code-hlght">YOUR_API_KEY</span>. This is where you put your assigned key (that long string of letters), which allows you to access and pull up your maps. While the key itself is NOT required, per se, you cannot do some of the deeper development and customization discussed in the advanced Google documentation without it.</p>
+
+<p>When you implement your script on the page, it should net you a result like this. It's the OSU Campus!</p>
+<br />
+<div id="map"></div>
+<script type="text/javascript">
+
+var OSULoc = { lat: 44.564, lng: -123.278 };
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: OSULoc,
+    zoom: 15
+
+  });
+
+}
+
+</script>
+ <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYV5pt9712PdpLCHB93yWWs7ytRZti6Do&callback=initMap">
+    </script>
+
+<h2>So, what's going on here?</h2>
+<p>My script has created a map focusing on the center (or near center) of the OSU campus. <span class="osu">Go Beavs!</span> In my earlier code sample, I pointed out two things that are essential to get a properly functioning map up and running.
+
+These are the <span class="code-hlght">zoom</span> and <span class="code-hlght">center</span> properties. <br /> 
+
+The <span class="code-hlght">center</span> property serves to anchor the map and point where the center of the image will be. I opted for the OSU Campus in this example, but you can put any latitude or longitude you want and have your map center on your favorite place.<br /> 
+
+<h3>A Potential Pitfall!</h3>
+<p>Remember to use negatives when inputing information for places south of the equator for latitude and negatives for longitudes west of the Prime Meridian in your <span class="code-hlght">center</span> property.Otherwise you might end up in China, Australia, or Europe when you wanted to put your map's center point on the East Coast of the US, Los Angeles, or even South America!</p> 
+
+<p>So, for example, if you want to look at Central Oregon/the Corvallis area, you want to put in 44.567N, 123.283W, or lat: 44.56 and lng: -123.283. Remember as well that degrees are divided by minutes and there are 60 degrees in a minute. So, if your coordinates are 34&deg;01'N, 118&deg;28'W (Santa Monica, CA), you would put in 1/60 or .0167 and 28/60, which is roughly .467, 34.017 and -118.467. </p>
+
+
+<p>The <span class="code-hlght">zoom</span> property determines how close in or how far out your map will start. The larger the number, the closer in you will start. If you chose 1 or 2, you will have largely a "global" view, though your map will always be centered on a particular coordinate. However, please note that you can end up with some locational dilution if you zoom in from far away as the map reorients itself with each zoom level. It usually won't be more than a few miles, but if you start your map in say, Rhode Island, and you zoom out real far, you could easily find yourself in Connecticut or Massachusetts if you zoom in rapidly.</p>
+
+<p>If want to start with a <span class="code-hlght">zoom</span> level of 1-4, you might want a marker. For most <span class="code-hlght">zoom</span> properties, I'd recommend at least 8, but no more than 16. I used 15 in my map above, which gives a fairly close in view. 12 will give a large neighborhood/district/small city view, and 8 gives a regional view.</a></p>
+
+<h2>A Basic Map Is Nice, What Other Out Of the Box Features Are There?</h2>
+<p>Quite a few in fact! Let's talk about some of the basic properties and scripting properties you can add to your map to make life for yourself and your users easier. With the stylization properties, you can make a map that highlights major thoroughfares in your area, color it to match the theme of your site, and otherwise help telegraph important information that you want to share with your friends and family bystylizing Your Map. However, let's take a step back and discuss how to add markers to point out exact locations and even customize markers to reflect your personal style. You can also customize your UI to add, remove, or even hide and disable features on your maps.</p>
+
+<a href="how-to2.html">Continue on to markers</a>
+
+
+<h2>Table of Contents</h2>
+ <div class="toc-button">
+    <a href="how-to.html">Getting Started</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to1.html">Creating Your First Map</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to2.html">How to Create Markers And Customize Your UI</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to3.html">Stylizing Your Maps</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-thoughts.html">Parting Thoughts</a>
+  </div>
+
+  <h3>Independent Demonstrations</h3>
+  <div class="toc-button">
+    <a href="UI-how-to.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-pac-12.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-sepia.html" target="_blank">A Sepia Map of LA</a>
+  </div>
+
+
+</body>
+</html>

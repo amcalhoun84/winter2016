@@ -1,0 +1,362 @@
+# FINAL PROJECT BASIC SCHEMA DRAFT II
+
+	
+
+SET foreign_key_checks = 0;
+	
+DROP TABLE IF EXISTS `game`, `genre`, `platform`, `review`, `rating`, `game_genre`, `game_platform`;
+	
+SET foreign_key_checks = 1;
+
+-- table Genre
+	
+--	Attributes: ID, name, characteristics,
+--	id int (11) - PRIMARY, AUTO_INCREMENT,
+--	name varchar(255)
+--	characteristics text
+--	Foreign Key: game_id referenced id in game
+	
+
+CREATE TABLE `genre`(
+	
+`genre_id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`name` varchar(255),
+`characteristics` text
+) ENGINE = 'innoDB';
+
+	
+
+-- table platform
+	
+--	Attributes: ID, Name, Manufacturer, Generation
+	
+--	Foreign Key: game_id references id in game
+
+	
+
+CREATE TABLE `platform`(
+`platform_id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`name` varchar(255),
+`manufacturer` varchar(255),
+`generation` varchar(255)
+) ENGINE = 'innoDB';
+
+	
+
+-- table REVIEW
+	
+--	ATTRIBUTES: id, star_rating, text_review, game_id(FK)
+	
+
+CREATE TABLE `review`(
+	
+`review_id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`star_rating` float(2,1),
+`text_review` text,
+`game_id` int(11)
+) ENGINE = 'innoDB';
+
+	
+
+-- table RATING
+	
+-- 	Attributes: ID, title, description, game_id
+	
+
+CREATE table `rating`(
+	
+`rating_id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`title` varchar(255),
+`description` text	
+### `game_id` int(11)
+	
+### This column is not needed since each rating can apply to many games and we already have the game referencing the rating.
+) ENGINE = 'innoDB';
+
+	
+
+
+-- table Game
+	
+--	Attributes: ID, int(11), (Primary Key, Auto_Increment)
+	
+-- 	Title, varchar (255) (Not Null?)
+	
+--	Publisher, varchar (255),
+	
+--	Release Date DATE
+
+#--	Foreign Key: rating_id references id in rating
+	
+#--	Foreign Key: review_id references id in review
+	
+--	Do you feel a unique key would be useful here?
+
+
+	
+###	I'm not sure what you mean.  You included an "ID" attribute, shouldn't that suffice?
+
+CREATE TABLE `game`(
+	
+`game_id` int(11) PRIMARY KEY AUTO_INCREMENT,
+`title` varchar(255), 
+`publisher` varchar(255),
+`release_date` date NOT NULL,
+`rating_id` int(11),
+`review_id` int(11),
+FOREIGN KEY(`review_id`) REFERENCES `review`(`review_id`),
+FOREIGN KEY(`rating_id`) REFERENCES `rating`(`rating_id`)
+-- Move these to a few alter statements to get the table double linked up.
+) ENGINE = 'innoDB';
+
+
+
+	
+
+CREATE TABLE `game_platform`(
+		
+`platform_id` int(11),
+		
+`game_id` int(11),
+		
+PRIMARY KEY (`platform_id`, `game_id`),
+		
+FOREIGN KEY (`platform_id`) REFERENCES `platform`(`platform_id`),
+		
+FOREIGN KEY (`game_id`) REFERENCES `game`(`game_id`)
+	
+) ENGINE = 'innoDB';
+
+	
+
+CREATE TABLE `game_genre` (
+
+`genre_id` int(11),
+	
+`game_id` int(11),
+	 
+PRIMARY KEY (`genre_id`, `game_id`),
+	
+-- Foreign Keys to have this work as a M-to-M relationship? What do you think Aaron?
+	
+### I like the idea of splitting this off and using the foreign keys, it should work fine 
+FOREIGN KEY (`genre_id`) REFERENCES `genre`(`genre_id`), 
+FOREIGN KEY (`game_id`) REFERENCES `game`(`game_id`)
+	
+) ENGINE = 'innoDB';
+
+
+	
+
+-- Table Entries --
+
+	
+INSERT INTO genre(name, characteristics)
+	
+VALUE ('Action', 'A generic catch-all for any game that requires a high degree of coordination and reflexes. Breaks down into several sub-genres, such as platformers, first-person shooters, stealth, etc.');
+
+
+INSERT INTO genre(name, characteristics)
+	
+VALUE ('First Person Shooter', 'First-person shooter video games, commonly known as FPSs, emphasize shooting and combat from the perspective of the character controlled by the player. This perspective is meant to give the player the feeling of "being there", and allows the player to focus on aiming');
+
+	
+
+INSERT INTO genre(name, characteristics)
+	
+VALUE ('Strategy', 'A generic catch-all for games that require both short and long term tactical and strategic thinking, management of resources, and planning. Sub-genres include civilization building, military simulation, real-time-strategy, and resource/corporate management titles.');
+
+	
+
+INSERT INTO genre(name, characteristics)
+	
+VALUE ('Casual', 'A catch-all for any game that can be played by non-enthusiasts and for short bits of time while providing a satisfying experience. Can include light puzzle games, mobile phone games, and any type of quick game that can be played in 15-30 minute bursts.');
+
+INSERT INTO genre(name, characteristics)
+	
+VALUE ('Roleplaying Game', 'Games where the player assumes a high level of customization and control over the character in an often expansive and sprawling environment. This and action games are probably some of the most diverse over-arching genres. Can include fantasy, modern-era, sci-fi, steampunk, and other fantastic settings.');
+
+	
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Sports', 'A simulation of games played for sport, where one or more teams play competitively against the other.');
+
+	
+
+INSERT INTO genre(name, characteristics)
+VALUE ('Simulation', 'A simulation video game describes a diverse super-category of video games, generally designed to closely simulate aspects of a real or fictional reality.');
+
+	
+
+INSERT INTO genre(name, characteristics)
+VALUE('Adventure', 'Adventure games were some of the earliest games created, beginning with the text adventure Colossal Cave Adventure in the 1970s. That game was originally titled simply "Adventure," and is the namesake of the genre. Over time, graphics have been introduced to the genre and the interface has evolved.');
+
+INSERT INTO genre(name, characteristics)
+VALUE('Other', 'Whatever we want it to be!');
+
+	
+
+-- PLATFORMS, anything prior to 7th Gen or Playstation 3/Xbox360/wii is used mostly for presentation purposes, and not for actual use in a	
+-- public environment. However, in a demonstration or personal use, especially if a user is cataloguing their collection of video games, they can
+-- add older systems to accomodate older games. 	
+-- Some older games are legends, and do deserve to be catalogued somewhere. 
+
+	
+
+INSERT INTO platform(name, manufacturer, generation)
+	
+VALUE ('Personal Computer', 'Various / Home-built', 'Variable On Internal Components');
+
+INSERT INTO platform(name, manufacturer, generation)	
+VALUE ('Apple Mac-Family PCs', 'Apple', 'Variable On Internal Components');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation 4', 'Sony', '8th');
+
+INSERT INTO platform(name, manufacturer, generation)	
+VALUE ('XBox One', 'Microsoft', '8th');
+	
+INSERT INTO platform(name, manufacturer, generation)	
+VALUE ('Wii U', 'Nintendo', '8th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Playstation 3', 'Sony', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Xbox 360', 'Microsoft', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Wii', 'Nintendo', '7th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Xbox', 'Microsoft', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('GameCube', 'Nintendo', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)	
+VALUE ('Playstation 2', 'Sony', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Dreamcast', 'Sega', '6th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Nintendo 64', 'Nintendo', '5th');	
+
+INSERT INTO platform(name, manufacturer, generation)	
+VALUE ('Playstation', 'Sony', '5th');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('SmartPhone', 'Varies', 'Varies');
+
+INSERT INTO platform(name, manufacturer, generation)
+VALUE ('Tablet', 'Varies', 'Varies');
+
+-- RATINGS, this is merely based on the ESRB rating system. Other rating systems do exist, and in a perfect world, some games would have more than one rating depending on the country or area of regulation.
+
+INSERT INTO rating(title, description)
+	
+VALUE ('E', 'Everyone, Content is generally suitable for all ages. May contain minimal cartoon, fantasy or mild violence and/or infrequent use of mild language. Equivalent to film rating G or milder PG.');
+
+INSERT INTO rating(title, description)
+	
+VALUE ('E10+', 'Everyone 10+, Content is generally suitable for ages 10 and up. May contain cartoon, fantasy or mild violence, mild language and/or minimal suggestive themes. Equivalent to film rating PG to mild PG-13.');
+
+INSERT INTO rating(title, description)
+	
+VALUE ('T', 'Teen, Content is generally suitable for ages 13 and up. May contain violence, suggestive themes, crude humor, minimal blood, simulated gambling and/or infrequent use of strong language. Equivalent to Film Rating PG-13, can border into R territory.');
+
+	
+
+INSERT INTO rating(title, description)
+	
+VALUE ('M', 'Mature, Meant for adult audiences. Content is generally suitable for ages 17 and up. May contain intense violence, blood and gore, sexual content and/or strong language. Equivalent to Film Rating R.');
+
+	
+
+INSERT INTO rating(title, description)
+	
+VALUE ('AO', 'Adults Only, Content suitable only for adults ages 18 and up. May include prolonged scenes of intense violence, graphic sexual content and/or gambling with real currency. Equivalent to Film Rating NC-17');
+
+
+INSERT INTO rating(title, description)
+	
+VALUE ('EC', 'Early Childhood, this title is often awarded to educational and edutainment games designed for children under the age of 7. ');
+
+	
+
+#-- Games
+
+INSERT INTO game(title, publisher, release_date, rating_id) 
+-- We need to figure out how to get multiple platforms, Aaron, which is why I'm suggesting the relationship tables.
+### Since it is a many-to-many relationship, I think that is the best option
+VALUE ('Skyrim', 'Bethesda Softworks', 20111111, 3);
+
+	
+	
+
+INSERT INTO game(title, publisher, release_date, rating_id)
+	
+VALUE ('World of Warcraft', 'Blizzard Entertainment', 20041105, 3);
+
+	
+
+INSERT INTO game(title, publisher, release_date, rating_id)
+	
+VALUE ('Assassin\'s Creed', 'UbiSoft', 20071114, 4);
+
+
+
+SET FOREIGN_KEY_CHECKS = 0;
+	
+
+INSERT INTO `game_platform`(`platform_id`, `game_id`) 
+VALUE (1, 1), (6, 1), (7, 1), (2, 1), (2, 2), (1, 3), (7, 3), (6, 3);
+	
+	
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+INSERT INTO `game_genre`(`genre_id`, `game_id`)
+VALUE (1, 1), (5, 1), (8, 1), (5, 2), (1, 3), (8, 3);
+
+INSERT INTO review(star_rating, text_review, game_id)
+VALUE ('9.4', 'I cannot say enough about this game without reveaing spoilers but I will say it is the finest game I have ever played.',  1);
+
+INSERT INTO review(star_rating, text_review, game_id)
+VALUE ('9.5', 'There is not much to say about this game! It\'s simply brilliant for one online game. Solid graphics, awesome gameplay and story, the game kicks it. But it\'s not for everyone because you really need to look details when questing, PvP, PvE etc. This is the best online game in the world...credits to Blizzard!',  2);
+
+INSERT INTO review(star_rating, text_review, game_id)
+VALUE ('7.7', 'A cool take on past events and how they could have really happened if things had been different. Assassin\'s Creed blends stealth and action together in a great way showing that Splinter Cell isn\'t the only series capable.',  3);
+
+### add the reviews to the game table
+UPDATE game g SET g.review_id=1 WHERE g.game_id=1;
+UPDATE game g SET g.review_id=2 WHERE g.game_id=2;
+UPDATE game g SET g.review_id=3 WHERE g.game_id=3;
+
+-- UPDATE game g SET genre_id=0 WHERE g.title = "Assassin's Creed";
+	
+-- I get this error when I try to use the aforementioned query;
+	
+-- #1452 - Cannot add or update a child row: a foreign key constraint fails (`calhouna-db`.`game`, CONSTRAINT `game_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`genre_id`)) 
+	
+-- I have removed all of the NOT NULL properties to see if I can get around this, but I am still struggling to make sure this all works and it is hampering me from moving forward and updating other
+	
+-- aspects of my query. 
+
+	
+-- This is the query list as of 11/13/2015, I am waiting for Aaron's feedback as well, so maybe he sees something I am missing too.
+### There are 2 issues with your query. First, you are looking for g.title="Asssasin's Creed" but in the table g.title="Assasin\'s Creed"
+### even though the "\" does not display in the table, it is still required for all queries of that title
+### Second, the game table does not have the "genre_id" column that you seem to be searching for.
+
+INSERT INTO game(title, publisher, release_date, rating_id)
+VALUES('Fallout 4', 'BethSoft', '20151110', '4');
+
+INSERT INTO review(star_rating, text_review, game_id)
+VALUES('8.7', 'Another entry in the seminal post-apocalyptic series, it does an admirable job of creating a vibrant and living world 200 years after the bombs fell in World War III. Complaints about previous games in BethSoft's long line of open world roleplaying games such as the Elder Scrolls and Fallout 3 and New Vegas have been addressed and the world feels much more alive. Taking advantage of current and next-gen technology has allowed things never before possible in a Fallout game to happen. Unfortunately, it is hamstrung by a number of game-breaking bugs and as we know, BethSoft is very slow to get these fixed. We can only hope the dedicated fan base can fix them up!', '4')
+
+UPDATE game g SET g.review_id=4 WHERE g.game_id=4;
+
+INSERT INTO game_genre('genre_id', 'game_id')
+(2,4), (5,4), (5,3);

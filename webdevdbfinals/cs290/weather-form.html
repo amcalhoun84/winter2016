@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather Form</title>
+    <script type="text/javascript" src="weather.js"></script>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Weather</legend>
+        <label for="zip">ZIP</label>
+        <input type="text" name="zip" id="zip">
+        <input type="submit" id="zipSubmit">
+        <br /><br />
+
+        <label for="city">CITY</label>
+        <input type="text" name="city" id="city">
+        <input type="Submit" id="citySubmit">
+        <br /><br />
+      </fieldset>
+    </form>
+    <div>
+      <h2>Result</h2>
+      <ul>
+        <li><span>City: </span><span id="cityName"></span></li>
+        <li><span>Current Temperature: </span><span id="temps"></span> Fahrenheit</li>
+        <li><span>Wind Speed: </span><span id="windSpeed"></span> MPH</li>
+        <li><span>Humidity: </span><span id="humidity"></span> %</li>
+      </ul>
+    </div>
+  </body>
+</html>

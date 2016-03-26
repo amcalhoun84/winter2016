@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title> How To Use the Google Maps API</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+
+
+</head>
+
+
+<body>
+<h1>UI Customization Demonstration</h1>
+
+<p>I figured this warranted its own demonstration, as it is a major part of customizing your map and needed to be it's own separate how-to. This should be considered a somewhat advanced technique, and you should familiarize yourself with the rest of the API before you do this.</p>
+
+<div id="map"></div>
+<script type="text/javascript">
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: {lat: 34.01, lng: -118.5},
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.TOP_CENTER,
+      mapTypeIds: [
+        google.maps.MapTypeId.ROADMAP,
+        google.maps.MapTypeId.TERRAIN
+        //google.maps.MapTypeId.HYBRID,
+        //google.maps.MapTypeId.SATELLITE
+      ]
+    },
+    zoomControl: true,
+    zoomControlOptions: {  position: google.maps.ControlPosition.RIGHT_CENTER 
+
+    },
+      scaleControl: true,
+      scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_RIGHT },
+      
+      streetViewControl: true,
+      streetViewControlOptions: { position: google.maps.ControlPosition.BOTTOM_CENTER
+    },
+      rotateControl: true,
+      rotateControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER
+      }
+   });
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: {lat: 34.01, lng: -118.5},
+    title: "I can see my house!"
+  });
+
+}
+
+</script>
+<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYV5pt9712PdpLCHB93yWWs7ytRZti6Do&callback=initMap">
+    </script>
+
+
+</body>
+
+The positioning nodes are as follows, going clockwise:</p>
+
+<ul>
+    <li><span class="code-hlght">TOP_CENTER</span></li>
+    <li><span class="code-hlght">TOP_RIGHT</span></li>
+    <li><span class="code-hlght">RIGHT_TOP</span></li>
+    <li><span class="code-hlght">RIGHT_CENTER</li>
+    <li><span class="code-hlght">RIGHT_BOTTOM</li>
+    <li><span class="code-hlght">BOTTOM_RIGHT</li>
+    <li><span class="code-hlght">BOTTOM_CENTER</li>
+    <li><span class="code-hlght">BOTTOM_LEFT</li>
+    <li><span class="code-hlght">LEFT_BOTTOM</li>
+    <li><span class="code-hlght">LEFT_CENTER</li>
+    <li><span class="code-hlght">LEFT_TOP</li>
+    <li><span class="code-hlght">TOP_LEFT</li>
+</ul>
+
+Each of these correspond to a place on the map like you see above. This allows you to customize the user interface of your map to your liking. By default, Google Maps has a pretty good UI, but sometimes you may want to remove, add, or customize the location of various components to match a theme you are going for or even to make it more intuitive for yourself or your users. This goes a bit beyond the scope of this demonstration, but I wanted to show what was possible with some fairly basic programming and considerations.
+
+Examine the code below and see what you notice. Do you notice the patterns that have been emerging since the beginning of this how-to? Note that almost everything starts with <span class="code-hlght">google.maps</span> then is followed by a specific component or parameter suffix, and it continues to chain until you are done.</p> 
+
+<p>For example, look at the code in red below. Notice how it has the Control Style, and the Control Position. This tells the Map API to place a horizontal bar at the top center of the map. While you can clutter the API with a lot of controls, it does attempt to place things in a reasonable and intelligble order.</p>
+
+<p>Within the properties, we also have the <span class="code-hlght">mapTypeIds</span>, which determine the type of maps that will be available on this map. I have commented out the remaining two; however, these can be used in lieu or in tandem with the available map types. Terrain generally covers the topography of the map, while road maps speak for themselves. A hybrid combines terrain and roadmaps or satellite and roadmaps, and satellite maps give a digital imagery view of the area your map is looking at.</p> 
+
+<div class="code-example">
+<pre>
+
+&lt;script type="text/javascript"&gt;
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: {lat: 34.01, lng: -118.0},
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      <span class="point-out">style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,</span>
+      <span class="point-out">position: google.maps.ControlPosition.TOP_CENTER,</span>
+      mapTypeIds: [
+        google.maps.MapTypeId.ROADMAP,
+        google.maps.MapTypeId.TERRAIN
+        //google.maps.MapTypeId.HYBRID,
+        //google.maps.MapTypeId.SATELLITE
+      ]
+    },
+    zoomControl: true,
+    zoomControlOptions: { <span class="point-out">position: google.maps.ControlPosition.RIGHT_CENTER</span>
+    },
+      scaleControl: true,
+      scaleControlOptions: { <span class="point-out">position: google.maps.ControlPosition.BOTTOM_RIGHT</span> },
+      
+      streetViewControl: true,
+      streetViewControlOptions: {
+        <span class="point-out">position: google.maps.ControlPosition.BOTTOM_CENTER</span> },
+      rotateControl: true,
+      rotateControlOptions: {
+        position: <span class="point-out">google.maps.ControlPosition.LEFT_CENTER</span>
+      }
+   });
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: {lat: 34.01, lng: -118.5},
+    title: "I can see my house!"
+  });
+
+}
+&lt;/script&gt;
+
+
+<p>This concludes the basic overview of UI customization, and we can continue on to our next topic, which is <a href="how-to3.html">stylizing our maps</a>, or we can return back to <a href="how-to2.html">markers and UI</a>.
+
+</pre>
+</div>
+
+<h2>Table of Contents</h2>
+ <div class="toc-button">
+    <a href="how-to.html">Getting Started</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to1.html">Creating Your First Map</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to2.html">How to Create Markers And Customize Your UI</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to3.html">Stylizing Your Maps</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-thoughts.html">Parting Thoughts</a>
+  </div>
+
+  <h3>Independent Demonstrations</h3>
+  <div class="toc-button">
+    <a href="UI-how-to.html" target="_blank">UI How To Demonstration</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-pac-12.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-sepia.html" target="_blank">A Sepia Map of LA</a>
+  </div>
+
+</body>
+</html>

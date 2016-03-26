@@ -1,0 +1,19 @@
+{
+  "name": "how-to-assignment",
+  "version": "1.0.0",
+  "description": "Due Week 10, on Dec 2",
+  "main": "pinhowto.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew M. Calhoun",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.2",
+    "express-handlebars": "^2.0.1",
+    "express-session": "^1.11.3",
+    "mysql": "^2.8.0",
+    "request": "^2.67.0"
+  }
+}

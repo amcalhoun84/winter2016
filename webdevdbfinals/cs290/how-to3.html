@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title> How To Use the Google Maps API</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+
+
+</head>
+
+
+<body>
+
+<h1>Stylizing Your Map</h1>
+<p>Almost everybody has seen the various doodles and gag-maps that have been put out over the past few years, one of the most famous being <a href="http://www.destructoid.com/google-maps-dragon-quest-edition--224894.phtml">the Dragon Quest-style map</a> as the 2012 April Fool's Joke. This was done through the customizability of their API, use of overlays and stylistic design, and you can also make stylistic changes to your map in addition to placing markers, giving, and restricting access to the various features that come with the map. You can really do some fun and neat things with it! While the Dragon Quest example is an extreme one with a lot of advanced work put into it, you can still do plenty with the given styling tools.</p>
+
+<p>Here is an example of what can be done using JSON. Remember, you have to define and then use the <span class="code-example">style</span> property to see any changes when you create your map. Add code like this after your initMap() function.
+
+<div class="code-sample">
+<pre>
+var styleArray = [
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "color": "#2cbc2b" },
+      { "visibility": "on" },
+      { "invert_lightness": true },
+      { "weight": 3 }
+    ]
+  },{
+    "featureType": "road.highway",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "visibility": "simplified" },
+      { "color": "#a04043" },
+      { "weight": 3.4 }
+    ]
+  }
+];
+</pre>
+</div>
+
+
+<div id="map"></div>
+<script type="text/javascript">
+
+function initMap() {
+var styleArray = [
+    {
+    "featureType": "all",
+    "stylers":
+    [
+      { "saturation": +50 }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "color": "#2cbc2b" },
+      { "visibility": "on" },
+      { "invert_lightness": true },
+      { "weight": 3 }
+    ]
+  },{
+    "featureType": "road.highway",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "visibility": "simplified" },
+      { "color": "#a04043" },
+      { "weight": 3.4 }
+    ]
+  }
+];
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 44.567, lng: -123.283},
+    styles: styleArray,
+    zoom: 8
+    
+  });
+}
+
+</script>
+ <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYV5pt9712PdpLCHB93yWWs7ytRZti6Do&callback=initMap">
+</script>
+
+<p> This is, of course, a very limited example demonstration of what the map API stylizing protocols can be used for. With the various stylistic parameters, you can easily customize your map to serve whatever purpose you want -- point out famous landmarks, make local parks stand out with a bright color, or highlight major traffic, water, and other pathways. Here, I upped the saturation to make the colors stand out and highlighted the arterial (major land-based) roadways in the map in green. It is a simplistic example, but it shows some of the basic abilities that map stylization has. Further on in the how-to, I create a sepia colored map to demonstrate what can be done with creative use of the varied parameters.</p>
+
+  <h3> A List of Parameters For Styling Your Map</h3>
+    <p>New Commands</p>
+    <ul>
+      <li><span class="code-hlght">style:</span> You attach this to your map with the name of your array of stylistic choices. </li>
+    </ul>
+    <p>Style Properties - there are literally dozens, but I will highlight the major and most useful ones. For a full list, go to Googles Reference <a href="https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapTypeStyleFeatureType" target="_blank">here</a>.</p>
+    <ul>
+      <li><span class="code-hlght">featureType:</span> The feature you want to highlight.
+        <ul>
+          <li><span class="code-hlght">administrative:</span> shows administrative areas. Sub categories can be used to highlight countries, land parcels, and other properties and cities.</li>
+          <li><span class="code-hlght">all:</span> Highlight all the thing.</li>
+          <li><span class="code-hlght">landscape:</span> Various landscaping items, whether natural or manmade. 
+          <li><span class="code-hlght">poi:</span> Highlights points of interest. This includes businesses, government, religious, and medical locations. 
+            <ul>
+              <li><span class="code-hlght">poi.attraction:</span> Tourist attractions.</li>
+              <li><span class="code-hlght">poi.business:</span> Businesses</li>
+              <li><span class="code-hlght">poi.government:</span> Government buildings</li>
+              <li><span class="code-hlght">poi.medical:</span> Hospitals and Emergency services</li>
+              <li><span class="code-hlght">poi.park:</span> Parks</li>
+              <li><span class="code-hlght">poi.place_of_worship:</span> Churches, temples, mosques.</li>
+              <li><span class="code-hlght">poi.school:</span> Schools and universities.</li>
+              <li><span class="code-hlght">poi.sports_complex:</span> Stadiums, arenas, and other sports complexes.</li>
+            </ul>
+          <li><span class="code-hlght">road: </span>Apply the styles to all roads.</li>
+            <ul>
+              <span class="code-hlght">road.arterial: </span>Major thoroughfares and some ground level highways</
+              <span class="code-hlght">road.highway: </span>Freeways and highways, such as the interstate and state highways.</li>
+              <span class="code-hlght">road.local: </span>Neighborhood roads. Generally not useful, and quite easily clutters up the map.</li>
+            </ul>
+            <li><span class="code-hlght">transit: </span> Transit lines, airports, and more. </li>
+            <li><span class="code-hlght">water: </span>Water ways.</li>
+
+
+
+<p><span class="code-hlght">stylers:</span></p>
+    <ul>
+    <li><span class="code-hlght">all:</span> Apply your stylization to everything.</li>
+    <li><span class="code-hlght">geometry</span>: This is the element of the feature. You can use this to make one particular element a solid color or you can make it two colors to stand out.</li>
+    <ul>
+      <li><span class="code-hlght">geometry.fill:</span> Selects only the fill (inside) color.</li>
+      <li><span class="code-hlght">geometry.stroke:</span> Selects only the line color.</li>
+    </ul>
+    <li><span class="code-hlght">labels:</span> Selects only the text of a particular feature's label</li>
+    <ul>
+      <li><span class="code-hlght">labels.icon:</span> Selects only the icon of the label, i.e; freeway symbols</li>
+      <li><span class="code-hlght">labels.text:</span> Selects only the text of the label</li>
+      <li><span class="code-hlght">labels.text.fill:</span> Fills in the letters of a label.</li>
+      <li><span class="code-hlght">labels.text.stroke:</span> Colors in the lines of letters of a label.</li>
+    </ul>
+  </ul>
+</ul>
+  <h3>The Stylers</h3>
+  <ul>
+  <li><span class="code-hlght">hue:</span> Basic Color. RGB style, i.e: #ffffff for white. This is used to tint your map a certain color.</li>
+  <li><span class="code-hlght">lightness:</span> Has a value between -100 and 100. This indicates how bright the color will be, with 100 being pure white, and -100 being pure black.</li>
+  <li><span class="code-hlght">saturation:</span> Has a value between -100 and 100. Determines the intensity of the color. 100 will create incredibly bright and vibrant colors, while -100 will display the map in shades of grey.</li>
+  <li><span class="code-hlght">gamma:</span> Has a Value between 0.01 and 10.0. 0.0 is neutral and no correction. Gamma is a very abstact way of correcting the brightness of an object. It is non-linear (thus there might not be a whole lot of difference between )</li>
+  <li><span class="code-hlght">invert_lightness:</span> - true or false. This switches your color to a darker or lighter counterpart. Useful if you need to quickly make change but don't want to fiddle with the color scheme too much.</li>
+  <li><span class="code-hlght">visibility:</span> (on, off, simplified) Does it appear on the map? You can turn off roads, highways, and other features if you feel they make your map too noisy or cluttered. Useful especially if you just want to show a static, satellite image, without roads and other features that are overlaid onto the image by default. </li>
+  <li><span class="code-hlght">color:</span> RBG style - similar to hue, but this is the color of the feature. Hue is more often used to modify or change the color scheme. <span class="code-hlght">color</span> will color your ENTIRE map if you use it under all elements.</li>
+  <li><span class="code-hlght">weight:</span> a value greater that or equal to zero. This indicates how many pixels the color (especially useful with stroke) line will take up. Be aware, if you have high weight elements overlapping each other, you might get what is called clipping -- which is a sudden drop off of the color in a jarring manner.</li>
+</ul>
+
+<p>Now that you got the basics of how to stylize your maps. With all of the aforementioned properties and parameters, you can create pretty sophisticated and beautiful maps with enough time and patience. Experimentation is the best way to learn.</p> 
+
+<p>I have included a sepia-style map of the Los Angeles area on <a href="how-to-sepia.html" target="_blank">this page</a> to demonstrate what can be done with a large number of properties and settings. Just be aware, that creating this many properties can make your map hard to manage and may result in overlaps that are displeasing to look at.</p>
+
+<p>By now you've mastered some of the basics of the Google Maps API and some of the more fun features. When you are ready, we can discuss some parting thoughts and places to go from here.</p>
+
+<a href="how-to-thoughts.html">Click here to wrap it all up.</a>
+
+<h2>Table of Contents</h2>
+ <div class="toc-button">
+    <a href="how-to.html">Getting Started</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to1.html">Creating Your First Map</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to2.html">How to Create Markers And Customize Your UI</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to3.html">Stylizing Your Maps</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-thoughts.html">Parting Thoughts</a>
+  </div>
+
+  <h3>Independent Demonstrations</h3>
+  <div class="toc-button">
+    <a href="UI-how-to.html" target="_blank">UI How To Demonstration</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-pac-12.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-sepia.html" target="_blank">A Sepia Map of LA</a>
+  </div>
+
+</body>
+</html>

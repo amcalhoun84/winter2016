@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>How To Use the GoogleMaps API</title>
+  <link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+
+
+<body>
+
+<h1>Pac-12 Map and Custom Icons</h1>
+
+<div id="map"></div>
+<script type="text/javascript">
+
+var calBerkeley = { lat: 37.871596, lng: -122.2605 };
+var uStanford = { lat: 37.429678, lng: -122.169330 };
+var UCLA = { lat: 34.070935, lng: -118.4447555 };
+var USC = { lat: 34.021074, lng: -118.286475 };
+var OSU = { lat: 44.564, lng: -123.278 };
+var oregon = { lat: 44.0436, lng: -123.071833 };
+var wazu = { lat: 46.732004, lng: -117.153220 };
+var washington = { lat: 47.656723, lng: -122.303380 };
+var arizona = { lat: 32.2318, lng: -110.951397 };
+var asu = { lat: 33.419788, lng: -111.933087 };
+var utah = { lat: 40.765855, lng: -111.842102 };
+var colorado = { lat: 40.009101, lng: -105.267675 };
+
+var mapPAC12;
+function initMap() {
+  mapPAC12 = new google.maps.Map(document.getElementById('map'), {
+    center: calBerkeley,
+    zoom: 8
+
+ });
+
+  var calMarker = new google.maps.Marker({
+    map: mapPAC12,
+    position: calBerkeley,
+    title: "Go Bears!",
+    icon: 'img/cal.png',
+    zIndex: 9999
+  });
+
+  var stanfordMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: uStanford,
+  title: 'Go Cardinal!',
+  icon: 'img/stanford.png',
+});
+
+  var uclaMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: UCLA,
+  title: 'Go Bruins!',
+  icon: 'img/ucla.png',
+});
+
+var USCMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: USC,
+  title: 'Fight On!',
+  icon: 'img/usc.png'
+});
+
+var OSUMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: OSU,
+  title: 'Go Beavs!',
+  icon: 'img/beavs.png',
+  zIndex: 9999
+});
+
+var oregonMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: oregon,
+  title: 'Go Ducks!',
+  icon: 'img/oregon.png'
+});
+
+
+var washingtonMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: washington,
+  title: 'Huskie Town!',
+  icon: 'img/uwash.png'
+});
+
+var wazuMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: wazu,
+  title: 'Cougars!',
+  icon: 'img/wazu.png'
+});
+
+var asuMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: asu,
+  title: 'Go Sun Devils!',
+  icon: 'img/asu.png'
+});
+
+var arizonaMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: arizona,
+  title: 'Go Wildcats!',
+  icon: 'img/arizona.png'
+});
+
+var utahMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: utah,
+  title: 'Go Utes!',
+  icon: 'img/utah.png'
+});
+
+var coloradoMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: colorado,
+  title: 'Buffalo Nation!',
+  icon: 'img/colorado.png'
+});
+
+}
+
+</script>
+ <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYV5pt9712PdpLCHB93yWWs7ytRZti6Do&callback=initMap">
+    </script>
+
+<p>This is a rather simple use of markers to show the location of each of the PAC-12 Universities. In addition, I have used custom icons to make each university stand out. The process itself it actually rather straight-forward and can be quickly duplicated once you successfully created one marker. A lot of the leg work has to do with figuring out of the latitudinal and longitudinal coordinates. I also created a large number of locations, with meaningful names to make them easier to remember and create consistency in the script. Remember, that the two most important parts of the marker functions are the <span class="code-example">map</span> and <span class="code-example">position</span> properties.</p>
+
+<p>The <span class="code-example">map</span> attaches the marker to a particular map, in this case, mapPAC12, and the <span class="code-example">position</span> is the location variable that is defined earlier. This is much cleaner than putting the latitude and longitude in each time.</p>
+
+<h2>Code for the above map</h2>
+
+	<pre>
+	&lt;script type="text/javascript"&gt;
+
+var calBerkeley = { lat: 37.871596, lng: -122.2605 };
+var uStanford = { lat: 37.429678, lng: -122.169330 };
+var UCLA = { lat: 34.070935, lng: -118.4447555 };
+var USC = { lat: 34.021074, lng: -118.286475 };
+var OSU = { lat: 44.564, lng: -123.278 };
+var oregon = { lat: 44.0436, lng: -123.071833 };
+var wazu = { lat: 46.732004, lng: -117.153220 };
+var washington = { lat: 47.656723, lng: -122.303380 };
+var arizona = { lat: 32.2318, lng: -110.951397 };
+var asu = { lat: 33.419788, lng: -111.933087 };
+var utah = { lat: 40.765855, lng: -111.842102 };
+var colorado = { lat: 40.009101, lng: -105.267675 };
+
+var mapPAC12;
+function initMap() {
+  mapPAC12 = new google.maps.Map(document.getElementById('map'), {
+    center: calBerkeley,
+    zoom: 8
+ });
+
+  var calMarker = new google.maps.Marker({
+    map: mapPAC12,
+    position: calBerkeley,
+    title: "Go Bears!",
+    icon: 'img/cal.png'
+  });
+
+  var stanfordMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: uStanford,
+  title: 'Go Cardinal!',
+  icon: 'img/stanford.png',
+});
+
+  var uclaMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: UCLA,
+  title: 'Go Bruins!',
+  icon: 'img/ucla.png',
+});
+
+var USCMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: USC,
+  title: 'Fight On!',
+  icon: 'img/usc.png',
+});
+
+var OSUMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: OSU,
+  title: 'Go Beavs!',
+  icon: 'img/beavs.png',
+});
+
+var oregonMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: oregon,
+  title: 'Go Ducks!',
+  icon: 'img/oregon.png',
+});
+
+
+var washingtonMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: washington,
+  title: 'Huskie Town!',
+  icon: 'img/uwash.png',
+});
+
+var wazuMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: wazu,
+  title: 'Cougars!',
+  icon: 'img/wazu.png',
+});
+
+var asuMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: asu,
+  title: 'Go Sun Devils!',
+  icon: 'img/asu.png',
+});
+
+var arizonaMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: arizona,
+  title: 'Go Wildcats!',
+  icon: 'img/arizona.png',
+});
+
+var utahMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: utah,
+  title: 'Go Utes!',
+  icon: 'img/utah.png',
+});
+
+var coloradoMarker = new google.maps.Marker({
+  map: mapPAC12, 
+  position: colorado,
+  title: 'Buffalo Nation!',
+  icon: 'img/colorado.png',
+});
+
+}
+
+&lt;/script&gt;
+ &lt;script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=INSERT_API_KEY&callback=initMap"&gt;
+    &lt;/script&gt;
+
+
+</pre>
+
+
+<h2>Table of Contents</h2>
+ <div class="toc-button">
+    <a href="how-to.html">Getting Started</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to1.html">Creating Your First Map</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to2.html">How to Create Markers And Customize Your UI</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to3.html">Stylizing Your Maps</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-thoughts.html">Parting Thoughts</a>
+  </div>
+
+  <h3>Independent Demonstrations</h3>
+  <div class="toc-button">
+    <a href="UI-how-to.html" target="_blank">UI How To Demonstration</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-pac-12.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-sepia.html" target="_blank">A Sepia Map of LA</a>
+  </div>
+
+</body>
+</html>

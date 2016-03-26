@@ -1,0 +1,147 @@
+html, body { height: 100%; margin: 0; padding: 0; font-size: 16pt; }
+
+#map { height: 50%; width: 50%; padding: 10px; margin: 20px 0; }
+
+pre
+{
+
+	font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+	margin-bottom: 10px;
+	overflow: auto;
+	width: auto;
+	padding: 5px;
+	background-color: black;
+	width: 400px
+	padding-bottom: 20px;
+	color: white;
+
+}
+
+article,
+aside,
+details,
+figcaption,
+caption,
+figure,
+header,
+footer,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary { display: block; }
+
+a
+{
+	color: blue;
+	text-decoration: none;
+}
+
+a:hover
+{
+	color: darkblue;
+	text-decoration:underline;
+}
+
+a:visited
+{
+	color: blue;
+	text-decoration: none;
+}
+
+a:active
+{
+	color: blue;
+	text-decoration: none;
+}
+
+
+h1
+{
+	text-size: 24pt;
+	color: #06f;
+	margin: .5em 0 .5em 5px;
+}
+
+
+h2
+{
+	text-size: 20pt;
+	color: #06f;
+	margin: .5em 0 .5em 5px;
+}
+
+h3
+{
+	text-size: 18pt;
+	color: #06f;
+	margin: .5em 0 .5em 5px;
+}
+
+p
+{
+	margin: .1em .25em .75em;
+	line-height: 18pt;
+}
+
+.code-example
+{
+	width: 60%;
+	margin: 10 px;
+}
+
+.code-hlght
+{
+	background-color: #ccc;
+	font-weight: bold;
+	padding: 2px 4px;
+	font-size: 90%;
+	color: #333;
+	border-radius: 8px;
+}
+
+.osu
+{
+	background-color: #000;
+	font-weight: bold;
+	padding: 2px 4px;
+	font-size: 90%;
+	color: orange;
+	border-radius: 8px;	
+}
+
+.point-out
+{
+	color: red;
+	font-weight: bolder;
+}
+
+li
+{ 	margin: 5px 0px 5px 10px;
+	padding: 2px 0px;
+	line-height: 24px;
+}
+
+.toc-button
+{
+
+	text-align: center;
+	background-color: blue;
+	padding: 20px 10px;
+	margin: 20px 0px 20px 10px;
+	width: 20%;
+	border-radius: 12px;
+}
+
+.toc-button a
+{
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+}
+
+.toc-button:hover
+{
+	background-color: #06f;
+}

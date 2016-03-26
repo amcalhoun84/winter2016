@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> How To Use the GoogleMaps API</title>
+  <link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+
+
+<body>
+
+   <h1>Markers! Bringing Attention To What's Important</h1>
+
+    <p>Probably the most commonly used feature of the Maps API is the marker. The following is the code you can use to set down a marker. This is the most basic marker possible. Like in previous examples, I've highlighted the core code needed to make a marker. If you were to copy and paste this code sample into your map script, it would place a marker at 0,0 on the global map. </p>
+
+<div class="code-example">
+    <pre>
+    var myLatLng = { lat: 0, lng: 0 }  // Note that I put this in so I don't have to retype it everywhere.
+
+          // Create a marker and set its position.
+    <span class="point-out">var marker = new google.maps.Marker({
+     map: map,</span>
+    <span class="point-out">position: myLatLng,</span>
+    <span class="point-out">title: 'Dead Center!'</span>
+  });
+}
+</pre>
+</div>
+
+<p>You can have multiple markers on a map, like in the one below. You can even use a custom icon, like I have done -- usually, I recommend one that is smaller, but I wanted to use one that got attention for the purposes of this tutorial. I'd recommend 15x15px to 30x30px. I also recommend <a href="http://www.benjaminkeen.com/google-maps-coloured-markers/" target="_blank">Benjamin Keen's set</a> for a good basic starter kit. Just store them in your images directory and use the <span class="code-hlght">icon</span> property like demonstrated in the code below, and you'll get have customized icons for your maps.</p>
+
+<div id="map"></div>
+<script type="text/javascript">
+
+var OSULoc = { lat: 44.564, lng: -123.278 };
+var EECSCenter = { lat: 44.566625, lng: -123.278635 };
+
+var mapTwo;
+function initMap() {
+  mapTwo = new google.maps.Map(document.getElementById('map'), {
+    center: OSULoc,
+    zoom: 15,
+    disableDefaultUI: true,
+    scrollwheel: false,
+    draggable: false
+
+  });
+
+  var marker = new google.maps.Marker({
+    map: mapTwo,
+    position: OSULoc,
+    title: "Go Beavs!",
+    label: "A"
+  });
+
+  var EECSMarker = new google.maps.Marker({
+  map: mapTwo, 
+  position: EECSCenter,
+  title: 'EECS / College of Engineering',
+  icon: 'img/my_computer.png',
+});
+
+}
+
+</script>
+ <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYV5pt9712PdpLCHB93yWWs7ytRZti6Do&callback=initMap">
+    </script>
+
+<div class="code-example">
+    <pre>
+&lt;script type="text/javascript"&gt;
+
+var OSULoc = { lat: 44.564, lng: -123.278 };
+var EECSCenter = { lat: 44.566625, lng: -123.278635 };
+
+var mapTwo;
+function initMap() {
+  mapTwo = new google.maps.Map(document.getElementById('map'), {
+    center: OSULoc,
+    zoom: 15,
+    <span class="point-out">disableDefaultUI: true,
+    scrollwheel: false,
+    draggable: false</span>
+
+  });
+
+  var marker = new google.maps.Marker({
+    map: mapTwo,
+    position: OSULoc,
+    title: "Go Beavs!",
+    <span class="point-out">label: "A"</span>
+  });
+
+  var EECSMarker = new google.maps.Marker({
+  map: mapTwo, 
+  position: EECSCenter,
+  title: 'EECS! EECS!',
+  <span class="point-out">icon: 'img/my_computer.png'</span> // This is the standard format for inputting
+                    // a custom icon.
+});
+
+}
+
+&lt;/script&gt;
+ &lt;script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=insertKeyHere&callback=initMap"&gt;
+    &lt;/script&gt;
+
+</pre>
+</div>
+
+<p>In my code sample, you may have noticed a few things that are a bit different. I have disabled,  for the map above, quite a few of the interactive features of the map, choosing to have a static image for my map. Also, you will notice the markers have some properties that are a little different from previous examples.
+
+First, you have the <span class="code-hlght">map</span> property, which tells the Marker which map to attach to. You can theoretically have multiple maps on a page, but I recommend against this as there is a potential for conflicts and data overruns. <span class="code-hlght">position</span> tells the API where to place the marker. You can either give it a pre-defined placement variable like above, or code it like <span class="code-hlght">position:</span> { lat: xyz.abc, lng: xyz.abc }. You unfortunately have to use latitude and longitude as of this release, but giving the variables meaningful names can help you stay organized. Especially if you want to do something fun, like place the PAC-12 School icons on a map, like the one <a style="font-weight: bolder;" href="how-to-pac-12.html" target="_blank">here</a>.
+
+<h3>To Review:</h3>
+<p>Each of the following are major properties to consider when placing a marker.</p>
+
+<ul>
+  <li><span class="code-hlght">map:</span> the map object the marker will be attached to. Make sure that this matches the map object's name, otherwise it won't appear!</li>
+  <li><span class="code-hlght">position:</span> The latitude and longitude of the marker placement. Use a meaningful variable name (i.e, var myHouse) to help keep them organized.</li>
+  <li><span class="code-hlght">icon:</span> This is the location and file name of the image file you are using to place your icon. While any size can be used, I generally recommend 15x15px to 30x30px, and no larger than 50x50px. Otherwise, things can end up quite cluttered.</li>
+  <li><span class="code-hlght">title:</span> When you hover over the icon, a little rollover will appear and output whatever is designated as the title in quotes. Leave messages for your friends and users.</li>
+  <li><span class="code-hlght">label:</span> For use with the default marker icon, only the first letter of the label is displayed, so it is more useful creating A, B, C, D... 1, 2, 3, 4... orderings, for say like directions or tours.</li>
+</ul>
+
+<p>Other useful things:</p>
+<ul>
+  <li><span class="code-hlght">draggable:</span> Allows you to pick up the marker and move it. true or false. Markers are static and fixed by default.</li>
+    <li><span class="code-hlght">zIndex:</span> Lets you place the marker backwards or forwards. Useful if you want to highlight one marker over another when significantly zoomed out.</li>
+    <li><span class="code-hlght">visible:</span> True or false - lets you determine if the marker is visible or not.</li>
+    <li><span class="code-hlght">opacity:</span> A variable number betweeen 0.0 and 1.0, which determines how opaque the marker will be. 0.0 means totally invisible, 0.5 means translucent, and 1.0 means opaque.</li>
+  </ul>
+
+
+
+<h2>Turning Features On And Off</h2>
+<p>You can turn things on and off fairly simply. This is useful if you want your map to focus on just one area or you don't want people needlessly playing with it. The easiest way to do it is to simply use the built in <span class="code-hlght">disableDefaultUI</span> property. You may have noticed that I did this with my map above.</p>
+
+<p>Generally, you place this with your various map properties. You can also disable the ability to scroll with the mouse wheel with the <span class="code-hlght">scrollwheel</span> property. If you want to disable the ability to pan, use the <span class="code-hlght">panControl</span> property. However, it should be noted, that this will be deprecated (no longer used) in the 3.22 release. If you want to outright disable the user's ability to move the map -- use the <span class="code-hlght">draggable</span> property.</p>
+
+<div class="code-example">
+<pre>
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 44.567, lng: -123.283},
+    zoom: 8,
+    <span class="point-out">disableDefaultUI: true</span>,
+    <span class="point-out">scrollwheel: false</span>,
+    <span class="point-out">panControl: false</span>, // Deprecated in v.3.22+
+    <span class="point-out">draggable: false</span>
+  });
+}
+
+</pre>
+
+    </div>
+
+<h3>Important UI Properties to Know</h3>
+
+<p>Most of these are fairly self-explanatory, but some do bear a bit of clarification.</p>
+
+<ul>
+    <li><span class="code-hlght">disableDefaultUI</span>: true or false - this is used to completely disable the user interface. While it is the quickest and easiest way to keep users focused on your map's given area, there may be things you want to allow.</li>
+    <li><span class="code-hlght">zoomControl</span>: true or false - this turns off the zoom control. Users can still zoom in and out if you allow the <span class="code-hlght">scrollwheel</span> property to be true.</li>
+    <li><span class="code-hlght">mapTypeControl</span>: true or false - this allows you to turn off the various, common types of maps that Google allows such as Map, Hybrid, and Satellite.</li>
+    <li><span class="code-hlght">streetViewControl</span>: true or false - turns off the Google Street View. This removes the ability to get an 'on-the-ground' perspective while playing with Google Maps.</li>
+    <li><span class="code-hlght">rotateControl</span>: true or false - this goes a little bit beyond the scope of this how-to guide, because it is part of the 45&deg; imagery functionality, which is a semi-advanced function that ties into the satellite view. I'd recommend putting it as false unless you intend to allow users full and free range.</li>
+    <li><span class="code-hlght">scaleControl</span>: true or false - provides a simple map scale and is actually invisible by default. If enabled, it allows you to see a scale of the map in terms of distance.</li>
+    <li><span class="code-hlght">draggable</span>: true or false - turns the ability of the user to move the map by clicking on it and moving their mouse on and off. It is on by default. If you want to disable this property, set it as false.</li>
+</ul>
+
+You can position these controls. The positioning nodes are as follows, going clockwise:</p>
+
+<ul>
+    <li><span class="code-hlght">TOP_CENTER</span></li>
+    <li><span class="code-hlght">TOP_RIGHT</span></li>
+    <li><span class="code-hlght">RIGHT_TOP</span></li>
+    <li><span class="code-hlght">RIGHT_CENTER</span></li>
+    <li><span class="code-hlght">RIGHT_BOTTOM</span></li>
+    <li><span class="code-hlght">BOTTOM_RIGHT</span></li>
+    <li><span class="code-hlght">BOTTOM_CENTER</span></li>
+    <li><span class="code-hlght">BOTTOM_LEFT</span></li>
+    <li><span class="code-hlght">LEFT_BOTTOM</span></li>
+    <li><span class="code-hlght">LEFT_CENTER</span></li>
+    <li><span class="code-hlght">LEFT_TOP</span></li>
+    <li><span class="code-hlght">TOP_LEFT</span></li>
+</ul>
+
+<p>Each of these correspond to a place on the map like you see above. This allows you to customize the user interface of your map to your liking.</p>
+
+<p>I put a lot of this code in red, to highlight the numerous new properties that are being introduced and will be discussed in my demonstration of the UI Customization properties.
+
+<p>Here is a sample of code for UI Customization:</p>
+
+<div class="code-example">
+<pre>
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: {lat: 34.01, lng: -118.5},
+    <span class="point-out">mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.TOP_CENTER,
+      mapTypeIds: [
+        google.maps.MapTypeId.ROADMAP,
+        google.maps.MapTypeId.TERRAIN
+      ]
+    },
+    zoomControl: true,
+    zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_CENTER 
+    },
+      scaleControl: true,
+      scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_RIGHT },
+      
+      streetViewControl: true,
+      streetViewControlOptions: {
+        position: google.maps.ControlPosition.BOTTOM_CENTER
+    },
+      rotateControl: true,
+      rotateControlOptions: {
+        position: google.maps.ControlPosition.LEFT_CENTER
+      }
+   });</span>
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: {lat: 34.01, lng: -118.5},
+    title: "I can see my house!"
+  });
+
+}
+</pre>
+
+<p>You can see the map in action <a style="font-weight: bolder;" href="UI-how-to.html" target="_blank">here</a>. I will also place the full code on that page as well for the purposes of the demonstration.</p>
+
+<p>Once you are done with that, or you just want to skip ahead, we will work on stylizing your maps. Not only can you place custom markers and enable and disable UI features that are pertinent to your chosen map, but you can also change the colors, highlight regions and other map features, and otherwise customize it visually to your heart's content. Learn how in the <a href="how-to3.html">map stylization tutorial</a></p>.
+
+<h2>Table of Contents</h2>
+ <div class="toc-button">
+    <a href="how-to.html">Getting Started</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to1.html">Creating Your First Map</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to2.html">How to Create Markers And Customize Your UI</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to3.html">Stylizing Your Maps</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-thoughts.html">Parting Thoughts</a>
+  </div>
+
+  <h3>Independent Demonstrations</h3>
+  <div class="toc-button">
+    <a href="UI-how-to.html" target="_blank">UI How To Demonstration</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-pac-12.html" target="_blank">Map of the Pac-12</a>
+  </div>
+  <div class="toc-button">
+    <a href="how-to-sepia.html" target="_blank">A Sepia Map of LA</a>
+  </div>
+
+
+
+</body>
+</html> 
